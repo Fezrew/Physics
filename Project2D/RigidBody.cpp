@@ -20,6 +20,8 @@ void RigidBody::applyForce(vec2 force)
 	m_velocity += force / m_mass;
 }
 
+// sure
+
 void RigidBody::applyForceToActor(RigidBody* actor2, vec2 force)
 {
 	actor2->applyForce(-force);
