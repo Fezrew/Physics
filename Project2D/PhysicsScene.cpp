@@ -42,6 +42,8 @@ void PhysicsScene::update(float dt)
 		int actorCount = m_actors.size();
 
 		checkForCollision();
+
+		cout << "Total energy: " << getTotalEnergy() << endl;
 	}
 }
 
@@ -132,10 +134,11 @@ bool PhysicsScene::sphere2Plane(PhysicsObject* obj1, PhysicsObject* obj2)
 		float sphereToPlane = dot(sphere->getPosition(), plane->getNormal()) - plane->getDistance(); 
 		float intersection = sphere->getRadius() - sphereToPlane; 
 		float velocityOutOfPlane = dot(sphere->getVelocity(), plane->getNormal()); 
+		vec2 contact = sphere->getPosition() + (collisionNormal * -sphere->getRadius());
 		
 		if (intersection > 0 && velocityOutOfPlane < 0) 
 		{
-			plane->resolveCollision(sphere);
+			plane->resolveCollision(sphere, contact);
 
 			return true;
 		}
@@ -150,9 +153,9 @@ bool PhysicsScene::sphere2Sphere(PhysicsObject* obj1, PhysicsObject* obj2)
 
 	if (sphere1 != nullptr && sphere2 != nullptr)
 	{
-		if (glm::distance(sphere1->getPosition(), sphere2->getPosition()) <= sphere1->getRadius() + sphere2->getRadius())
+		if (distance(sphere1->getPosition(), sphere2->getPosition()) <= sphere1->getRadius() + sphere2->getRadius())
 		{
-			sphere1->resolveCollision(sphere2);
+			sphere1->resolveCollision(sphere2, 0.5f * (sphere1->getPosition() + sphere2->getPosition()));
 
 			return true;
 		}

@@ -12,7 +12,7 @@ public:
 	virtual void fixedUpdate(vec2 gravity, float timeStep);
 	virtual void draw();
 	virtual void resetPosition();
-	void resolveCollision(RigidBody* actor2);
+	void resolveCollision(RigidBody* actor2, vec2 contact);
 
 	vec2 getNormal() { return m_normal; }
 	float getDistance() { return m_distanceToOrigin; }

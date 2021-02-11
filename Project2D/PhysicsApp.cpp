@@ -10,7 +10,6 @@ using namespace glm;
 
 PhysicsApp::PhysicsApp() 
 {
-
 }
 
 PhysicsApp::~PhysicsApp() 
@@ -27,17 +26,18 @@ bool PhysicsApp::startup()
 	m_font = new aie::Font("./font/consolas.ttf", 32);
 	
 	m_physicsScene = new PhysicsScene();
-	m_physicsScene->setGravity(vec2(0, -9.8));
+	//m_physicsScene->setGravity(vec2(0, -9.8));
 	m_physicsScene->setTimeStep(0.01f);
+	m_timer = 0;
 
 
-	Sphere* ball = new Sphere(vec2(20, 0), vec2(11.11f, 0), 1.7f, 2.8f, vec4(1, 0, 0, 1));
+	Sphere* ball = new Sphere(vec2(20, 0), vec2(11.11f, 0), 0, 0, 1.7f, 2.8f, vec4(1, 0, 0, 1));
 	m_physicsScene->addActor(ball);
 
-	Sphere* ball2 = new Sphere(vec2(40, 0), vec2(0), 1.6f, 3, vec4(0, 1, 0, 1));
+	Sphere* ball2 = new Sphere(vec2(40, 0), vec2(0), 0, 0, 1.6f, 3, vec4(0, 1, 0, 1));
 	m_physicsScene->addActor(ball2);
 
-	Sphere* ball3 = new Sphere(vec2(-50, 30), vec2(-10, -8), 200.0f, 15, vec4(0, 1, 1, 1));
+	Sphere* ball3 = new Sphere(vec2(-50, 30), vec2(-10, -8), 0, 0, 200.0f, 15, vec4(0, 1, 1, 1));
 	m_physicsScene->addActor(ball3);
 
 	Plane* plane = new Plane(vec2(0, 1), -55, vec4(0, 0, 1, 1));
@@ -97,6 +97,9 @@ void PhysicsApp::draw()
 	m_2dRenderer->drawText(m_font, fps, 0, 720 - 32);
 	m_2dRenderer->drawText(m_font, "Least Janky Game", 0, 720 - 64);
 
+	char timer[32];
+	sprintf_s(timer, 32, "Time elapsed: %i", (int)m_timer);
+	m_2dRenderer->drawText(m_font, timer, 160, 720 - 32);
 
 	// done drawing sprites
 	m_2dRenderer->end();

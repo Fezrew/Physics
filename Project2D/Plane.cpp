@@ -37,7 +37,7 @@ void Plane::resetPosition()
 {
 }
 
-void Plane::resolveCollision(RigidBody* actor2)
+void Plane::resolveCollision(RigidBody* actor2, vec2 contact)
 {
 	float elasticity = 1;
 
@@ -47,7 +47,7 @@ void Plane::resolveCollision(RigidBody* actor2)
 
 	float kePre = actor2->getKineticEnergy();
 
-	actor2->applyForce(force);
+	actor2->applyForce(force, contact - actor2->getPosition());
 
 	float kePost = actor2->getKineticEnergy();
 
