@@ -39,6 +39,14 @@ void Plane::resetPosition()
 
 void Plane::resolveCollision(RigidBody* actor2, vec2 contact)
 {
+	vec2 localContact = contact - actor2->getPosition();
+
+	vec2 vRel = actor2->getVelocity() + actor2->getAngularVelocity() * vec2(-localContact.y, localContact.x);
+	float velocityIntoPlane = dot(vRel, m_normal);
+
+	float r = dot(localContact, vec2(m_normal.y, -m_normal.x));
+	float mass0 = 1.0f / (1.0f / actor2->getMass() + (r * r) / actor2->getMoment());
+
 	float elasticity = 1;
 
 	float j = dot(-(1 + elasticity) * (actor2->getVelocity()), m_normal) / (1 / actor2->getMass());

@@ -5,6 +5,7 @@
 #include "Font.h"
 #include "Input.h"
 #include "Sphere.h"
+#include "Box.h"
 
 using namespace glm;
 
@@ -26,7 +27,7 @@ bool PhysicsApp::startup()
 	m_font = new aie::Font("./font/consolas.ttf", 32);
 	
 	m_physicsScene = new PhysicsScene();
-	//m_physicsScene->setGravity(vec2(0, -9.8));
+	m_physicsScene->setGravity(vec2(0, -9.8));
 	m_physicsScene->setTimeStep(0.01f);
 	m_timer = 0;
 
@@ -51,6 +52,10 @@ bool PhysicsApp::startup()
 
 	Plane* plane4 = new Plane(vec2(-1, 0), -98, vec4(0, 0, 1, 1));
 	m_physicsScene->addActor(plane4);
+
+	Box* box = new Box(vec2(0, -20), vec2(0), 0, 10, 20.0f, vec4(1, 0, 1, 1), 5, 3);
+	m_physicsScene->addActor(box);
+
 
 	return true;
 }

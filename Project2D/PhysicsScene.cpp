@@ -1,5 +1,6 @@
 #include "PhysicsScene.h"
 #include "Sphere.h"
+#include "Box.h"
 
 vec2 PhysicsScene::m_gravity;
 
@@ -119,6 +120,45 @@ bool PhysicsScene::plane2Sphere(PhysicsObject* obj1, PhysicsObject* obj2)
 
 bool PhysicsScene::plane2Box(PhysicsObject* obj1, PhysicsObject* obj2)
 {
+	Plane* plane = dynamic_cast<Plane*>(obj1);
+	Box* box = dynamic_cast<Box*>(obj2);
+
+	if (box != nullptr && plane != nullptr)
+	{
+		int numContacts = 0;
+		vec2 contact(0, 0);
+		float contactV = 0;
+
+		vec2 planeOrigin = plane->getNormal() * plane->getDistance();
+
+		for (float x = -box->getExtents().x; x < box->getWidth(); x += box->getWidth())
+		{
+			for (float y = -box->getExtents().y; y < box->getHeight(); y += box->getHeight())
+			{
+				vec2 p = box->getPosition() + x * box->getLocalX() + y * box->getLocalY();
+				float distFromPlane = dot(p - planeOrigin, plane->getNormal());
+
+				vec2 displacement = x * box->getLocalX() + y * box->getLocalY();
+				vec2 pointVelocity = box->getVelocity() + box->getAngularVelocity() * vec2(-displacement.y, displacement.x);
+
+				float velocityIntoPlane = dot(pointVelocity, plane->getNormal());
+
+				if (distFromPlane < 0 && velocityIntoPlane <= 0)
+				{
+					numContacts++;
+					contact += p;
+					contactV += velocityIntoPlane;
+				}
+			}
+		}
+
+		if (numContacts > 0)
+		{
+			plane->resolveCollision(box, contact / (float)numContacts);
+			return true;
+		}
+	}
+
 	return false;
 }
 
@@ -166,21 +206,64 @@ bool PhysicsScene::sphere2Sphere(PhysicsObject* obj1, PhysicsObject* obj2)
 
 bool PhysicsScene::sphere2Box(PhysicsObject* obj1, PhysicsObject* obj2)
 {
-	return false;
+	return box2Sphere(obj2, obj1);;
 }
 
 bool PhysicsScene::box2Plane(PhysicsObject* obj1, PhysicsObject* obj2)
 {
-	return false;
+	return plane2Box(obj2, obj1);
 }
 
 bool PhysicsScene::box2Sphere(PhysicsObject* obj1, PhysicsObject* obj2)
 {
+	Box* box = dynamic_cast<Box*>(obj1);
+	Sphere* sphere = dynamic_cast<Sphere*>(obj2);
+
+	if (box != nullptr && sphere != nullptr)
+	{
+		vec2 circlePosWorld = sphere->getPosition() - box->getPosition();
+		vec2 circlePosBox = vec2(dot(circlePosWorld, box->getLocalX()), dot(circlePosWorld, box->getLocalY()));
+
+		vec2 closestPointOnBoxBox = circlePosBox;
+		vec2 extents = box->getExtents();
+
+#pragma region Clamping
+		if (closestPointOnBoxBox.x < -extents.x)
+		{
+			closestPointOnBoxBox.x = -extents.x;
+		}
+		if (closestPointOnBoxBox.x > extents.x)
+		{
+			closestPointOnBoxBox.x = extents.x;
+		}
+		if (closestPointOnBoxBox.y < -extents.y)
+		{						  
+			closestPointOnBoxBox.y = -extents.y;
+		}						  
+		if (closestPointOnBoxBox.y > extents.y)
+		{						  
+			closestPointOnBoxBox.y = extents.y;
+		}
+#pragma endregion
+
+		vec2 closestPointOnBoxWorld = box->getPosition() + closestPointOnBoxBox.x * box->getLocalX() + closestPointOnBoxBox.y * box->getLocalY();
+		vec2 circleToBox = sphere->getPosition() - closestPointOnBoxWorld;
+
+		if (length(circleToBox) < sphere->getRadius())
+		{
+			vec2 direction = normalize(circleToBox);
+			vec2 contact = closestPointOnBoxWorld;
+			box->resolveCollision(sphere, contact, &direction);
+		}
+	}
+
 	return false;
 }
 
 bool PhysicsScene::box2Box(PhysicsObject* obj1, PhysicsObject* obj2)
 {
+	
+
 	return false;
 }
 #pragma endregion
