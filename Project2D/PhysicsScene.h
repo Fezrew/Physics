@@ -30,6 +30,7 @@ public:
 	float getTimeStep() const { return m_timeStep; }
 
 	void checkForCollision();
+	static void ApplyContactForces(RigidBody* body1, RigidBody* body2, vec2 norm, float pen);
 
 	static bool plane2Plane(PhysicsObject*, PhysicsObject*); 
 	static bool plane2Sphere(PhysicsObject*, PhysicsObject*);

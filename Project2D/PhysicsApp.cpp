@@ -9,23 +9,23 @@
 
 using namespace glm;
 
-PhysicsApp::PhysicsApp() 
+PhysicsApp::PhysicsApp()
 {
 }
 
-PhysicsApp::~PhysicsApp() 
+PhysicsApp::~PhysicsApp()
 {
 
 }
 
-bool PhysicsApp::startup() 
+bool PhysicsApp::startup()
 {
 	// increase the 2d line count to maximize the number of objects we can draw
 	aie::Gizmos::create(255U, 255U, 65535U, 65535U);
 
 	m_2dRenderer = new aie::Renderer2D();
 	m_font = new aie::Font("./font/consolas.ttf", 32);
-	
+
 	m_physicsScene = new PhysicsScene();
 	m_physicsScene->setGravity(vec2(0, -9.8));
 	m_physicsScene->setTimeStep(0.01f);
@@ -38,7 +38,7 @@ bool PhysicsApp::startup()
 	Sphere* ball2 = new Sphere(vec2(40, 0), vec2(0), 0, 0, 1.6f, 3, vec4(0, 1, 0, 1));
 	m_physicsScene->addActor(ball2);
 
-	Sphere* ball3 = new Sphere(vec2(-50, 30), vec2(-10, -8), 0, 0, 200.0f, 15, vec4(0, 1, 1, 1));
+	Sphere* ball3 = new Sphere(vec2(-50, 30), vec2(-500, -75), 0, 0, 2000.0f, 15, vec4(0, 1, 1, 1));
 	m_physicsScene->addActor(ball3);
 
 	Plane* plane = new Plane(vec2(0, 1), -55, vec4(0, 0, 1, 1));
@@ -56,17 +56,20 @@ bool PhysicsApp::startup()
 	Box* box = new Box(vec2(0, -20), vec2(0), 0, 10, 20.0f, vec4(1, 0, 1, 1), 5, 3);
 	m_physicsScene->addActor(box);
 
+	Box* box2 = new Box(vec2(0, -40), vec2(0, 100), 200, 0, 400.0f, vec4(1, 1, 0, 1), 35, 5);
+	m_physicsScene->addActor(box2);
+
 
 	return true;
 }
 
-void PhysicsApp::shutdown() 
+void PhysicsApp::shutdown()
 {
 	delete m_font;
 	delete m_2dRenderer;
 }
 
-void PhysicsApp::update(float deltaTime) 
+void PhysicsApp::update(float deltaTime)
 {
 
 	m_timer += deltaTime;
@@ -84,7 +87,7 @@ void PhysicsApp::update(float deltaTime)
 		quit();
 }
 
-void PhysicsApp::draw() 
+void PhysicsApp::draw()
 {
 
 	// wipe the screen to the background colour
@@ -92,7 +95,7 @@ void PhysicsApp::draw()
 
 	// begin drawing sprites
 	m_2dRenderer->begin();
-	
+
 	static float aspectRatio = 16 / 9.f;
 	aie::Gizmos::draw2D(ortho<float>(-100, 100, -100 / aspectRatio, 100 / aspectRatio, -1.0f, 1.0f));
 

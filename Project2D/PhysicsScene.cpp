@@ -16,7 +16,6 @@ void PhysicsScene::addActor(PhysicsObject* actor)
 {
 	m_actors.push_back(actor);
 }
-
 void PhysicsScene::removeActor(PhysicsObject* actor)
 {
 	auto it = find(m_actors.begin(), m_actors.end(), actor);
@@ -47,7 +46,6 @@ void PhysicsScene::update(float dt)
 		cout << "Total energy: " << getTotalEnergy() << endl;
 	}
 }
-
 void PhysicsScene::draw()
 {
 	for (auto pActor : m_actors)
@@ -107,17 +105,27 @@ void PhysicsScene::checkForCollision()
 	}
 }
 
+void PhysicsScene::ApplyContactForces(RigidBody* body1, RigidBody* body2, vec2 norm, float pen)
+{
+	float body2Mass = body2 ? body2->getMass() : INT_MAX;
+	float body1Factor = body2Mass / (body1->getMass() + body2Mass);
+
+	body1->setPosition(body1->getPosition() - body1Factor * norm * pen);
+	if (body2)
+	{
+		body2->setPosition(body2->getPosition() + (1 - body1Factor) * norm * pen);
+	}
+}
+
 bool PhysicsScene::plane2Plane(PhysicsObject* obj1, PhysicsObject* obj2)
 {
 	return false;
 }
-
 bool PhysicsScene::plane2Sphere(PhysicsObject* obj1, PhysicsObject* obj2)
 {
 	// reverse the order of arguments, as obj1 is the plane and obj2 is the sphere
 	return sphere2Plane(obj2, obj1);
 }
-
 bool PhysicsScene::plane2Box(PhysicsObject* obj1, PhysicsObject* obj2)
 {
 	Plane* plane = dynamic_cast<Plane*>(obj1);
@@ -169,14 +177,14 @@ bool PhysicsScene::sphere2Plane(PhysicsObject* obj1, PhysicsObject* obj2)
 
 	if (sphere != nullptr && plane != nullptr)
 	{
-		vec2 collisionNormal = plane->getNormal(); 
+		vec2 collisionNormal = plane->getNormal();
 
-		float sphereToPlane = dot(sphere->getPosition(), plane->getNormal()) - plane->getDistance(); 
-		float intersection = sphere->getRadius() - sphereToPlane; 
-		float velocityOutOfPlane = dot(sphere->getVelocity(), plane->getNormal()); 
+		float sphereToPlane = dot(sphere->getPosition(), plane->getNormal()) - plane->getDistance();
+		float intersection = sphere->getRadius() - sphereToPlane;
+		float velocityOutOfPlane = dot(sphere->getVelocity(), plane->getNormal());
 		vec2 contact = sphere->getPosition() + (collisionNormal * -sphere->getRadius());
-		
-		if (intersection > 0 && velocityOutOfPlane < 0) 
+
+		if (intersection > 0 && velocityOutOfPlane < 0)
 		{
 			plane->resolveCollision(sphere, contact);
 
@@ -185,7 +193,6 @@ bool PhysicsScene::sphere2Plane(PhysicsObject* obj1, PhysicsObject* obj2)
 	}
 	return false;
 }
-
 bool PhysicsScene::sphere2Sphere(PhysicsObject* obj1, PhysicsObject* obj2)
 {
 	Sphere* sphere1 = dynamic_cast<Sphere*>(obj1);
@@ -193,9 +200,15 @@ bool PhysicsScene::sphere2Sphere(PhysicsObject* obj1, PhysicsObject* obj2)
 
 	if (sphere1 != nullptr && sphere2 != nullptr)
 	{
-		if (distance(sphere1->getPosition(), sphere2->getPosition()) <= sphere1->getRadius() + sphere2->getRadius())
+		float dist = distance(sphere1->getPosition(), sphere2->getPosition());
+		if ( dist <= sphere1->getRadius() + sphere2->getRadius())
 		{
-			sphere1->resolveCollision(sphere2, 0.5f * (sphere1->getPosition() + sphere2->getPosition()));
+			float penetration = sphere1->getRadius() + sphere2->getRadius() - dist;
+			if (penetration > 0)
+			{
+				sphere1->resolveCollision(sphere2, (sphere1->getPosition() + sphere2->getPosition()) * 0.5f, nullptr, penetration);
+			}
+
 
 			return true;
 		}
@@ -203,7 +216,6 @@ bool PhysicsScene::sphere2Sphere(PhysicsObject* obj1, PhysicsObject* obj2)
 
 	return false;
 }
-
 bool PhysicsScene::sphere2Box(PhysicsObject* obj1, PhysicsObject* obj2)
 {
 	return box2Sphere(obj2, obj1);;
@@ -213,7 +225,6 @@ bool PhysicsScene::box2Plane(PhysicsObject* obj1, PhysicsObject* obj2)
 {
 	return plane2Box(obj2, obj1);
 }
-
 bool PhysicsScene::box2Sphere(PhysicsObject* obj1, PhysicsObject* obj2)
 {
 	Box* box = dynamic_cast<Box*>(obj1);
@@ -237,11 +248,11 @@ bool PhysicsScene::box2Sphere(PhysicsObject* obj1, PhysicsObject* obj2)
 			closestPointOnBoxBox.x = extents.x;
 		}
 		if (closestPointOnBoxBox.y < -extents.y)
-		{						  
+		{
 			closestPointOnBoxBox.y = -extents.y;
-		}						  
+		}
 		if (closestPointOnBoxBox.y > extents.y)
-		{						  
+		{
 			closestPointOnBoxBox.y = extents.y;
 		}
 #pragma endregion
@@ -249,21 +260,43 @@ bool PhysicsScene::box2Sphere(PhysicsObject* obj1, PhysicsObject* obj2)
 		vec2 closestPointOnBoxWorld = box->getPosition() + closestPointOnBoxBox.x * box->getLocalX() + closestPointOnBoxBox.y * box->getLocalY();
 		vec2 circleToBox = sphere->getPosition() - closestPointOnBoxWorld;
 
-		if (length(circleToBox) < sphere->getRadius())
+		float penetration = sphere->getRadius() - glm::length(circleToBox);
+		if (penetration > 0)
 		{
 			vec2 direction = normalize(circleToBox);
 			vec2 contact = closestPointOnBoxWorld;
-			box->resolveCollision(sphere, contact, &direction);
+			box->resolveCollision(sphere, contact, &direction, penetration);
 		}
 	}
 
 	return false;
 }
-
 bool PhysicsScene::box2Box(PhysicsObject* obj1, PhysicsObject* obj2)
 {
-	
+	Box* box1 = dynamic_cast<Box*>(obj1);
+	Box* box2 = dynamic_cast<Box*>(obj2);
 
+	if (box1 != nullptr && box2 != nullptr)
+	{
+		glm::vec2 boxPos = box2->getPosition() - box1->getPosition();
+		glm::vec2 norm(0, 0);
+		glm::vec2 contact(0, 0);
+		float pen = 0;
+		int numContacts = 0;
+
+		box1->checkBoxCorners(*box2, contact, numContacts, pen, norm);
+
+		if (box2->checkBoxCorners(*box1, contact, numContacts, pen, norm)) {
+			norm = -norm;
+		}
+
+		if (pen > 0) 
+		{
+			box1->resolveCollision(box2, contact / float(numContacts), &norm, pen);
+		}
+		return true;
+	}
 	return false;
+
 }
 #pragma endregion
