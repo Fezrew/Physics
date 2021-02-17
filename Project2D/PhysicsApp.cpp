@@ -6,6 +6,7 @@
 #include "Input.h"
 #include "Sphere.h"
 #include "Box.h"
+#include "Spring.h"
 
 using namespace glm;
 
@@ -69,6 +70,8 @@ bool PhysicsApp::startup()
 	
 	Sphere* ball5 = new Sphere(vec2(40, 50), vec2(0, 0), 0, 0, 1.6f, 3, vec4(0, 1, 0, 1));
 	m_physicsScene->addActor(ball5);
+
+	m_physicsScene->addActor(new Spring( ball4, ball5, 20, 10, 0.1f, vec4(1,0,0,1)));
 
 	return true;
 }

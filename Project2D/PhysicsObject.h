@@ -9,6 +9,7 @@ using namespace glm;
 
 enum ShapeType
 { 
+	JOINT = -1,
 	PLANE = 0,
 	SPHERE,
 	BOX,
@@ -18,11 +19,12 @@ enum ShapeType
 class PhysicsObject
 {
 protected:
-	PhysicsObject(ShapeType a_shapeID, vec4 colour) : m_shapeID(a_shapeID), m_colour(colour) {}
 	ShapeType m_shapeID;
 	vec4 m_colour;
 
 public:
+	PhysicsObject(ShapeType a_shapeID, vec4 colour) : m_shapeID(a_shapeID), m_colour(colour) {}
+
 	virtual void fixedUpdate(vec2 gravity, float timeStep) = 0;
 	virtual void draw() = 0;
 	virtual void resetPosition() {};

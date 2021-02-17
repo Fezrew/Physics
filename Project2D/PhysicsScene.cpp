@@ -92,6 +92,11 @@ void PhysicsScene::checkForCollision()
 			int shapeID1 = object1->getShapeID();
 			int shapeID2 = object2->getShapeID();
 
+			if (shapeID1 < 0 || shapeID2 < 0)
+			{
+				continue;
+			}
+
 			//Function pointer time
 			int functionIDx = (shapeID1 * SHAPE_COUNT) + shapeID2;
 
@@ -201,7 +206,7 @@ bool PhysicsScene::sphere2Sphere(PhysicsObject* obj1, PhysicsObject* obj2)
 	if (sphere1 != nullptr && sphere2 != nullptr)
 	{
 		float dist = distance(sphere1->getPosition(), sphere2->getPosition());
-		if ( dist <= sphere1->getRadius() + sphere2->getRadius())
+		if (dist <= sphere1->getRadius() + sphere2->getRadius())
 		{
 			float penetration = sphere1->getRadius() + sphere2->getRadius() - dist;
 			if (penetration > 0)
@@ -290,7 +295,7 @@ bool PhysicsScene::box2Box(PhysicsObject* obj1, PhysicsObject* obj2)
 			norm = -norm;
 		}
 
-		if (pen > 0) 
+		if (pen > 0)
 		{
 			box1->resolveCollision(box2, contact / float(numContacts), &norm, pen);
 		}
