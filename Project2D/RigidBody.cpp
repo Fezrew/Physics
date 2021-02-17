@@ -1,10 +1,12 @@
 #include "RigidBody.h"
 #include "PhysicsScene.h"
 
-RigidBody::RigidBody(ShapeType shapeID, vec2 position, vec2 velocity, float angularVelocity, float moment, float orientation, float mass, vec4 colour) : PhysicsObject(shapeID, colour), m_position(position), m_mass(mass), m_velocity(velocity), m_angularVelocity(angularVelocity), m_orientation(orientation), m_moment(moment)
+RigidBody::RigidBody(ShapeType shapeID, vec2 position, vec2 velocity, float angularVelocity, float moment, float orientation, float mass, vec4 colour)
+	: PhysicsObject(shapeID, colour), m_position(position), m_mass(mass), m_velocity(velocity), m_angularVelocity(angularVelocity), m_orientation(orientation), m_moment(moment)
 {
 	m_linearDrag = 0.3f;
 	m_angularDrag = 0.3f;
+	m_isKinematic = false;
 }
 
 RigidBody::~RigidBody()
@@ -13,7 +15,14 @@ RigidBody::~RigidBody()
 
 void RigidBody::fixedUpdate(vec2 gravity, float timeStep)
 {
-	applyForce(gravity * m_mass * timeStep, { 0, 0 });
+	if (m_isKinematic)
+	{
+		m_velocity = vec2(0);
+		m_angularVelocity = 0;
+		return;
+	}
+
+	applyForce(gravity * getMass() * timeStep, { 0, 0 });
 	m_velocity -= m_velocity * m_linearDrag * timeStep;
 	m_angularVelocity -= m_angularVelocity * m_angularDrag * timeStep;
 	m_position += m_velocity * timeStep;
@@ -22,7 +31,10 @@ void RigidBody::fixedUpdate(vec2 gravity, float timeStep)
 
 	if (length(m_velocity) < MIN_LINEAR_THRESHOLD)
 	{
-		m_velocity = vec2(0, 0);
+		if (length(m_velocity) < length(gravity) * m_linearDrag * timeStep)
+		{
+			m_velocity = vec2(0, 0);
+		}
 	}
 	if (abs(m_angularVelocity) < MIN_ANGULAR_THRESHOLD)
 	{
@@ -49,8 +61,8 @@ void RigidBody::resolveCollision(RigidBody* actor2, vec2 contact, vec2* collisio
 
 	if (v1 > v2)
 	{
-		float mass1 = 1.0f / (1.0f / m_mass + (r1 * r1) / getMoment());
-		float mass2 = 1.0f / (1.0f / actor2->m_mass + (r2 * r2) / actor2->getMoment());
+		float mass1 = 1.0f / (1.0f / getMass() + (r1 * r1) / getMoment());
+		float mass2 = 1.0f / (1.0f / actor2->getMass() + (r2 * r2) / actor2->getMoment());
 
 		float elasticity = 0.925f;
 

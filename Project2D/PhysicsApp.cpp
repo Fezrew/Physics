@@ -32,33 +32,43 @@ bool PhysicsApp::startup()
 	m_timer = 0;
 
 
-	Sphere* ball = new Sphere(vec2(20, 0), vec2(11.11f, 0), 0, 0, 1.7f, 2.8f, vec4(1, 0, 0, 1));
-	m_physicsScene->addActor(ball);
-
-	Sphere* ball2 = new Sphere(vec2(40, 0), vec2(0), 0, 0, 1.6f, 3, vec4(0, 1, 0, 1));
-	m_physicsScene->addActor(ball2);
-
-	Sphere* ball3 = new Sphere(vec2(-50, 30), vec2(-500, -75), 0, 0, 2000.0f, 15, vec4(0, 1, 1, 1));
-	m_physicsScene->addActor(ball3);
-
+	//Sphere* ball = new Sphere(vec2(20, 0), vec2(11.11f, 0), 0, 0, 1.7f, 2.8f, vec4(1, 0, 0, 1));
+	//m_physicsScene->addActor(ball);
+	//
+	//Sphere* ball2 = new Sphere(vec2(40, 50), vec2(0, 800), 0, 0, 1.6f, 3, vec4(0, 1, 0, 1));
+	//m_physicsScene->addActor(ball2);
+	//
+	//Sphere* ball3 = new Sphere(vec2(-50, 30), vec2(-500, -75), 0, 0, 2000.0f, 15, vec4(0, 1, 1, 1));
+	//m_physicsScene->addActor(ball3);
+	//
 	Plane* plane = new Plane(vec2(0, 1), -55, vec4(0, 0, 1, 1));
 	m_physicsScene->addActor(plane);
-
+	
 	Plane* plane2 = new Plane(vec2(0, -1), -55, vec4(0, 0, 1, 1));
 	m_physicsScene->addActor(plane2);
-
+	
 	Plane* plane3 = new Plane(vec2(1, 0), -98, vec4(0, 0, 1, 1));
 	m_physicsScene->addActor(plane3);
-
+	
 	Plane* plane4 = new Plane(vec2(-1, 0), -98, vec4(0, 0, 1, 1));
 	m_physicsScene->addActor(plane4);
+	//
+	//Box* box = new Box(vec2(0, -20), vec2(0), 0, 10, 20.0f, vec4(1, 0, 1, 1), 5, 3);
+	//m_physicsScene->addActor(box);
+	//
+	//Box* box2 = new Box(vec2(0, -40), vec2(0, 100), 200, 0, 400.0f, vec4(1, 1, 0, 1), 35, 5);
+	//m_physicsScene->addActor(box2);
+	//
+	//Box* box3 = new Box(vec2(30, -10), vec2(0, 0), 0, 0, 400.0f, vec4(1, 1, 1, 1), 40, 5);
+	//m_physicsScene->addActor(box3);
+	//box3->setKinematic(true);
 
-	Box* box = new Box(vec2(0, -20), vec2(0), 0, 10, 20.0f, vec4(1, 0, 1, 1), 5, 3);
-	m_physicsScene->addActor(box);
-
-	Box* box2 = new Box(vec2(0, -40), vec2(0, 100), 200, 0, 400.0f, vec4(1, 1, 0, 1), 35, 5);
-	m_physicsScene->addActor(box2);
-
+	Sphere* ball4 = new Sphere(vec2(20, 0), vec2(0, 0), 0, 0, 1.7f, 2.8f, vec4(1, 0, 0, 1));
+	m_physicsScene->addActor(ball4);
+	ball4->setKinematic(true);
+	
+	Sphere* ball5 = new Sphere(vec2(40, 50), vec2(0, 0), 0, 0, 1.6f, 3, vec4(0, 1, 0, 1));
+	m_physicsScene->addActor(ball5);
 
 	return true;
 }

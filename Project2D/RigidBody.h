@@ -20,13 +20,18 @@ public:
 	vec2 getPosition() { return m_position; }
 	vec2 setPosition(vec2 position) { return m_position = position; }
 	vec2 getVelocity() { return m_velocity; }
+	float getMass() { return m_isKinematic ? INT_MAX : m_mass; }
+
 	float getOrientation() { return m_orientation; }
 	float getAngularVelocity() { return m_angularVelocity; }
-	float getMoment() { return m_moment; }
-	float getMass() { return m_mass; }
+	float getMoment() { return m_isKinematic ? INT_MAX : m_moment; }
+
 	float getKineticEnergy() { return 0.5f * (m_mass * dot(m_velocity, m_velocity) + m_moment * m_angularVelocity * m_angularVelocity); }
 	float getPotentialEnergy();
 	float getEnergy() override;
+
+	void setKinematic(bool state) { m_isKinematic = state; }
+	bool isKinematic() { return m_isKinematic; }
 
 	
 
@@ -39,4 +44,5 @@ protected:
 	float m_moment;
 	float m_linearDrag;
 	float m_angularDrag;
+	bool m_isKinematic;
 };
