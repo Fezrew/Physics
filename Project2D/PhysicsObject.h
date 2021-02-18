@@ -9,6 +9,7 @@ using namespace glm;
 
 enum ShapeType
 { 
+	SHIP = -2,
 	JOINT = -1,
 	PLANE = 0,
 	SPHERE,
@@ -30,6 +31,7 @@ public:
 	virtual void resetPosition() {};
 	virtual float getEnergy() { return 0; }
 	vec4 getColour() { return m_colour; }
+	void setColour(vec4 col) { m_colour = col}
 	ShapeType getShapeID() { return m_shapeID; }
 };
 

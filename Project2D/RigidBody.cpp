@@ -45,7 +45,11 @@ void RigidBody::fixedUpdate(vec2 gravity, float timeStep)
 void RigidBody::applyForce(vec2 force, vec2 pos)
 {
 	m_velocity += force / getMass();
-	m_angularVelocity += (force.y * pos.x - force.x * pos.y) / getMoment();
+
+	if (!m_isShip)
+	{
+		m_angularVelocity += (force.y * pos.x - force.x * pos.y) / getMoment();
+	}
 }
 
 void RigidBody::resolveCollision(RigidBody* actor2, vec2 contact, vec2* collisionNormal, float pen)

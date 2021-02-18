@@ -97,6 +97,8 @@ void PhysicsScene::checkForCollision()
 				continue;
 			}
 
+			// todo - check if these two objects can interact (eg rocket body and rockethead)
+
 			//Function pointer time
 			int functionIDx = (shapeID1 * SHAPE_COUNT) + shapeID2;
 
@@ -110,6 +112,7 @@ void PhysicsScene::checkForCollision()
 	}
 }
 
+#pragma region Resolution
 void PhysicsScene::ApplyContactForces(RigidBody* body1, RigidBody* body2, vec2 norm, float pen)
 {
 	float body2Mass = body2 ? body2->getMass() : INT_MAX;
@@ -304,4 +307,5 @@ bool PhysicsScene::box2Box(PhysicsObject* obj1, PhysicsObject* obj2)
 	return false;
 
 }
+#pragma endregion
 #pragma endregion
