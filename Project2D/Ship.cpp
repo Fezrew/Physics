@@ -1,11 +1,19 @@
 #include "Ship.h"
 
-Ship::Ship(vec2 position, float acceleration, float speedCap, float orientation)
+Ship::Ship(vec2 position, float acceleration, float speedCap, float orientation, vec4 colour)
+	: PhysicsObject(SHIP, colour)
 {
 	m_position = position;
 	m_orientation = orientation;
 	m_acceleration = acceleration;
 	m_speedCap = speedCap;
+	m_colour = colour;
+	m_velocity = vec2(0, 0);
+}
+
+Ship::~Ship()
+{
+
 }
 
 void Ship::fixedUpdate(vec2 gravity, float timeStep)
@@ -16,7 +24,7 @@ void Ship::fixedUpdate(vec2 gravity, float timeStep)
 	{
 		applyForce(movement);
 	}
-	for (int i = 0; i <= sizeof(shipParts); i++)
+	for (int i = 0; i < sizeof(shipParts); i++)
 	{
 		shipParts[i]->applyForce(movement, shipParts[i]->getPosition());
 	}
@@ -34,5 +42,9 @@ void Ship::addToShip(RigidBody* rb)
 	shipParts.push_back(rb);
 	rb->setShip(true);
 	m_mass += rb->getMass();
-	rb.setColour(m_colour)
+	rb->PhysicsObject::setColour(m_colour);
+}
+
+void Ship::draw()
+{
 }

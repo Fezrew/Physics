@@ -30,8 +30,8 @@ public:
 	virtual void draw() = 0;
 	virtual void resetPosition() {};
 	virtual float getEnergy() { return 0; }
+	virtual void setColour(vec4 colour) { m_colour = colour; }
 	vec4 getColour() { return m_colour; }
-	void setColour(vec4 col) { m_colour = col}
 	ShapeType getShapeID() { return m_shapeID; }
 };
 

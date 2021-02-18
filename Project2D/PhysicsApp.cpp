@@ -88,8 +88,12 @@ bool PhysicsApp::startup()
 	//SoftBody::Build(m_physicsScene, vec2(50, -30), 5.0f, 10.0f, 0.1, sb, vec4(1, 0, 0, 1));
 #pragma endregion
 
-	Ship* ship = new Ship(vec2(0, 0), 20, 15, 0);
+	Ship* ship = new Ship(vec2(0, 0), 20, 15, 0, vec4(1, 0, 0, 1));
 	m_physicsScene->addActor(ship);
+
+	Sphere* ball = new Sphere(ship->getPosition(), vec2(0, 0), 0, 0, 0, 20.0f, vec4(1, 1, 1, 1));
+	m_physicsScene->addActor(ball);
+	ship->addToShip(ball);
 
 	return true;
 }

@@ -2,16 +2,18 @@
 #include "RigidBody.h"
 #include <vector>
 
-class Ship : PhysicsObject
+class Ship : public PhysicsObject
 {
 public:
-	Ship(vec2 position, float acceleration, float speedCap, float orientation);
+	Ship(vec2 position, float acceleration, float speedCap, float orientation, vec4 colour);
 	~Ship();
 
-	void fixedUpdate(vec2 gravity, float timeStep);
+	virtual void fixedUpdate(vec2 gravity, float timeStep);
+	virtual void draw();
 	void applyForce(vec2 force);
 	void addToShip(RigidBody* rb);
 
+	vec2 getPosition() { return m_position; }
 	vec2 getVelocity() { return m_velocity; }
 	float getSpeed() { return m_acceleration; }
 	float getMass() { return m_mass; }
