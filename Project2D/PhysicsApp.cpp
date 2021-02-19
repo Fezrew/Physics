@@ -31,7 +31,7 @@ bool PhysicsApp::startup()
 	m_font = new aie::Font("./font/consolas.ttf", 32);
 
 	m_physicsScene = new PhysicsScene();
-	m_physicsScene->setGravity(vec2(0, -9.8));
+	m_physicsScene->setGravity(vec2(0, 0));
 	m_physicsScene->setTimeStep(0.01f);
 	m_timer = 0;
 
@@ -88,12 +88,16 @@ bool PhysicsApp::startup()
 	//SoftBody::Build(m_physicsScene, vec2(50, -30), 5.0f, 10.0f, 0.1, sb, vec4(1, 0, 0, 1));
 #pragma endregion
 
-	Ship* ship = new Ship(vec2(0, 0), 20, 15, 0, vec4(1, 0, 0, 1));
+	Ship* ship = new Ship(vec2(0, 0), 50, 25, 1, 90, vec4(1, 0, 0, 1));
 	m_physicsScene->addActor(ship);
 
-	Sphere* ball = new Sphere(ship->getPosition(), vec2(0, 0), 0, 0, 0, 20.0f, vec4(1, 1, 1, 1));
-	m_physicsScene->addActor(ball);
-	ship->addToShip(ball);
+	Box* box = new Box(vec2(0,0), vec2(0), 0, 0, 20.0f, vec4(1, 0, 1, 1), 4, 4);
+	m_physicsScene->addActor(box);
+	ship->addToShip(box, vec2(0,0), 0);
+
+	Box* box2 = new Box(vec2(0,0), vec2(0), 0, 0, 20.0f, vec4(1, 0, 1, 1), 2.8, 2.8);
+	m_physicsScene->addActor(box2);
+	ship->addToShip(box2, vec2(2,2), 45);
 
 	return true;
 }

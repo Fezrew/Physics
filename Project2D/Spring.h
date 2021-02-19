@@ -14,6 +14,11 @@ public:
 	float getSpringCoefficient() { return m_springForce; }
 
 	virtual void fixedUpdate(vec2 gravity, float timeStep);
+	virtual void applyForce(vec2 force) {}
+	virtual float getMass() { return 0.0f; }
+	virtual void setPosition(vec2 position) {}
+	virtual vec2 getPosition() { return vec2(0, 0); }
+	virtual void shipContact(vec2 contact) {}
 	virtual void draw();
 
 

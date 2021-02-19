@@ -6,6 +6,7 @@
 
 
 using namespace glm;
+using namespace aie;
 
 enum ShapeType
 { 
@@ -31,6 +32,11 @@ public:
 	virtual void resetPosition() {};
 	virtual float getEnergy() { return 0; }
 	virtual void setColour(vec4 colour) { m_colour = colour; }
+	virtual void applyForce(vec2 force) = 0;
+	virtual float getMass() = 0;
+	virtual vec2 getPosition() = 0;
+	virtual void setPosition(vec2 position) = 0;
+	virtual void shipContact(vec2 contact) = 0;
 	vec4 getColour() { return m_colour; }
 	ShapeType getShapeID() { return m_shapeID; }
 };

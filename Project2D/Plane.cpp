@@ -1,6 +1,6 @@
 #include "Plane.h"
-#include "RigidBody.h"
 #include "PhysicsScene.h"
+#include "Ship.h"
 
 Plane::Plane(vec2 normal, float distance, vec4 colour) : PhysicsObject(ShapeType::PLANE, colour)
 {
@@ -46,7 +46,16 @@ void Plane::resolveCollision(RigidBody* actor2, vec2 contact)
 	float velocityIntoPlane = dot(vRel, m_normal);
 
 	float r = dot(localContact, vec2(m_normal.y, -m_normal.x));
-	float mass0 = 1.0f / (1.0f / actor2->getMass() + (r * r) / actor2->getMoment());
+	float mass0;
+
+	if (actor2->isShip())
+	{
+		mass0 = 1.0f / (1.0f /  actor2->getShip()->getMass());
+	}
+	else
+	{
+		mass0 = 1.0f / (1.0f / actor2->getMass() + (r * r) / actor2->getMoment());
+	}
 
 	float elasticity = 0.925;
 

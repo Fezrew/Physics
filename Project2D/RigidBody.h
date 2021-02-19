@@ -14,14 +14,18 @@ public:
 	~RigidBody();
 
 	virtual void fixedUpdate(vec2 gravity, float timeStep);
+	virtual void applyForce(vec2 force) {}
+	virtual void shipContact(vec2 contact) {}
 	void applyForce(vec2 force, vec2 pos);
 	void resolveCollision(RigidBody* actor2, vec2 contact, vec2* collisionNormal = nullptr, float pen = 0);
 
-	vec2 setPosition(vec2 position) { return m_position = position; }
-	vec2 getPosition() { return m_position; }
+	void setVelocity(vec2 velocity) { m_velocity = velocity; }
 	vec2 getVelocity() { return m_velocity; }
+	virtual void setPosition(vec2 position) { m_position = position; }
+	virtual vec2 getPosition() { return m_position; }
 	float getMass() { return m_isKinematic ? INT_MAX : m_mass; }
 
+	void setOrientation(float orientation) { m_orientation = orientation; }
 	float getOrientation() { return m_orientation; }
 	float getAngularVelocity() { return m_angularVelocity; }
 	float getMoment() { return m_isKinematic ? INT_MAX : m_moment; }
@@ -33,8 +37,17 @@ public:
 	void setKinematic(bool state) { m_isKinematic = state; }
 	bool isKinematic() { return m_isKinematic; }
 
-	void setShip(bool state) { m_isShip = state; }
-	bool isShip() { return m_isShip; }
+	PhysicsObject* getShip() { return m_ship; }
+	void setShip(PhysicsObject* ship) { m_ship = ship; }
+	bool isShip() { return m_ship != nullptr; }
+
+	void setLocalOrientation(float localOrientation) { m_localOrientation = localOrientation * (pi<float>() / 180.0f); }
+	float getLocalOrientation() { return m_localOrientation; }
+	void setLocalPos(vec2 localPos) { m_localPos = localPos; }
+	vec2 getLocalPos() { return m_localPos; }
+	vec2 getLocalX() { return m_localX; }
+	vec2 getLocalY() { return m_localY; }
+	glm::vec2 toWorld(glm::vec2 localPos);
 
 protected:
 	vec2 m_position;
@@ -46,5 +59,11 @@ protected:
 	float m_linearDrag;
 	float m_angularDrag;
 	bool m_isKinematic;
-	bool m_isShip;
+	float m_localOrientation;
+
+	PhysicsObject* m_ship = nullptr;
+
+	vec2 m_localPos;
+	vec2 m_localX;
+	vec2 m_localY;
 };

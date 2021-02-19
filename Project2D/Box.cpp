@@ -89,16 +89,6 @@ bool Box::checkBoxCorners(const Box& box, vec2& contact, int& numContacts, float
 	return res;
 }
 
-void Box::fixedUpdate(vec2 gravity, float timeStep)
-{
-	RigidBody::fixedUpdate(gravity, timeStep);
-
-	float cs = cosf(m_orientation);
-	float sn = sinf(m_orientation);
-
-	m_localX = normalize(vec2(cs, sn));
-	m_localY = normalize(vec2(-sn, cs));
-}
 
 void Box::draw()
 {

@@ -116,13 +116,27 @@ void PhysicsScene::checkForCollision()
 void PhysicsScene::ApplyContactForces(RigidBody* body1, RigidBody* body2, vec2 norm, float pen)
 {
 	float body2Mass = body2 ? body2->getMass() : INT_MAX;
-	float body1Factor = body2Mass / (body1->getMass() + body2Mass);
+	float body1Factor = 0;
 
-	body1->setPosition(body1->getPosition() - body1Factor * norm * pen);
+	if (body1->isShip())
+	{
+		body1Factor = body2Mass / (body1->getShip()->getMass() + body2Mass);
+		body1->getShip()->shipContact(body1->getShip()->getPosition() - body1Factor * norm * pen);
+
+		//body1Factor = body2Mass / (body1->getMass() + body2Mass);
+		//body1->setPosition(body1->getPosition() - body1Factor * norm * pen);
+	}
+	else
+	{
+		body1Factor = body2Mass / (body1->getMass() + body2Mass);
+		body1->setPosition(body1->getPosition() - body1Factor * norm * pen);
+	}
+
 	if (body2)
 	{
 		body2->setPosition(body2->getPosition() + (1 - body1Factor) * norm * pen);
 	}
+
 }
 
 bool PhysicsScene::plane2Plane(PhysicsObject* obj1, PhysicsObject* obj2)

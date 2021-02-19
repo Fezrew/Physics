@@ -4,8 +4,8 @@
 RigidBody::RigidBody(ShapeType shapeID, vec2 position, vec2 velocity, float angularVelocity, float moment, float orientation, float mass, vec4 colour)
 	: PhysicsObject(shapeID, colour), m_position(position), m_mass(mass), m_velocity(velocity), m_angularVelocity(angularVelocity), m_orientation(orientation), m_moment(moment)
 {
-	m_linearDrag = 0.3f;
-	m_angularDrag = 0.3f;
+	m_linearDrag = 0.0f;
+	m_angularDrag = 0.0f;
 	m_isKinematic = false;
 }
 
@@ -15,6 +15,12 @@ RigidBody::~RigidBody()
 
 void RigidBody::fixedUpdate(vec2 gravity, float timeStep)
 {
+	float cs = cosf(m_orientation);
+	float sn = sinf(m_orientation);
+
+	m_localX = normalize(vec2(cs, sn));
+	m_localY = normalize(vec2(-sn, cs));
+
 	if (m_isKinematic)
 	{
 		m_velocity = vec2(0);
@@ -44,10 +50,14 @@ void RigidBody::fixedUpdate(vec2 gravity, float timeStep)
 
 void RigidBody::applyForce(vec2 force, vec2 pos)
 {
-	m_velocity += force / getMass();
 
-	if (!m_isShip)
+	if (isShip())
 	{
+		m_ship->applyForce(force);
+	}
+	else
+	{
+		m_velocity += force / getMass();
 		m_angularVelocity += (force.y * pos.x - force.x * pos.y) / getMoment();
 	}
 }
@@ -100,4 +110,9 @@ float RigidBody::getPotentialEnergy()
 float RigidBody::getEnergy()
 {
 	return getKineticEnergy() + getPotentialEnergy();
+}
+
+glm::vec2 RigidBody::toWorld(vec2 localPos)
+{
+	return m_position + localPos.x * m_localX + localPos.y * m_localY;
 }
