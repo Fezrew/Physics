@@ -63,6 +63,8 @@ void Ship::fixedUpdate(vec2 gravity, float timeStep)
 	{
 		for (int i = 0; i < shipParts.size(); i++)
 		{
+			shipParts[i]->setPosition(m_position + (shipParts[i]->getLocalPos() * shipOrientation));
+			shipParts[i]->setOrientation(shipParts[i]->getLocalOrientation() + m_orientation);
 			shipParts[i]->setVelocity(m_velocity);
 		}
 	}

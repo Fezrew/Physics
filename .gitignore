@@ -18,6 +18,14 @@ x64/
 x86/
 bld/
 [Oo]bj/
+!dependencies/glfw/*/x64
+
+#Unity
+PhysicsCharacter/[Tt]emp
+PhysicsCharacter/[Ll]ibrary
+PhysicsCharacter/[Ll]ogs
+PhysicsCharacter/[Uu]ser[Ss]ettings
+
 
 # Visual Studio 2015 cache/options directory
 .vs/
