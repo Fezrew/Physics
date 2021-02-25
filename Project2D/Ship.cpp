@@ -25,7 +25,6 @@ Ship::~Ship()
 
 void Ship::fixedUpdate(vec2 gravity, float timeStep)
 {
-	bool rotating = false;
 	shipOrientation = vec2(cosf(m_orientation), sinf(m_orientation));
 	vec2 movement = shipOrientation * m_acceleration;
 
@@ -43,30 +42,17 @@ void Ship::fixedUpdate(vec2 gravity, float timeStep)
 	if (input->isKeyDown(INPUT_KEY_A))
 	{
 		m_orientation += m_turnSpeed;
-		rotating = true;
 	}
 	else if (input->isKeyDown(INPUT_KEY_D))
 	{
 		m_orientation -= m_turnSpeed;
-		rotating = true;
 	}
-	if (rotating)
+
+	for (int i = 0; i < shipParts.size(); i++)
 	{
-		for (int i = 0; i < shipParts.size(); i++)
-		{
-			shipParts[i]->setPosition(m_position + (shipParts[i]->getLocalPos() * shipOrientation));
-			shipParts[i]->setOrientation(shipParts[i]->getLocalOrientation() + m_orientation);
-			shipParts[i]->setVelocity(m_velocity);
-		}
-	}
-	else
-	{
-		for (int i = 0; i < shipParts.size(); i++)
-		{
-			shipParts[i]->setPosition(m_position + (shipParts[i]->getLocalPos() * shipOrientation));
-			shipParts[i]->setOrientation(shipParts[i]->getLocalOrientation() + m_orientation);
-			shipParts[i]->setVelocity(m_velocity);
-		}
+		shipParts[i]->setPosition(m_position + (shipParts[i]->getLocalPos() * shipOrientation));
+		shipParts[i]->setOrientation(shipParts[i]->getLocalOrientation() + m_orientation);
+		shipParts[i]->setVelocity(m_velocity);
 	}
 }
 

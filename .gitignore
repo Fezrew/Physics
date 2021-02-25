@@ -237,4 +237,4 @@ _Pvt_Extensions
 PhysicsCharacter/[Tt]emp
 PhysicsCharacter/[Ll]ibrary
 PhysicsCharacter/[Ll]ogs
-!PhysicsCharacter/[Pp]ackages
+!PhysicsCharacter/[Pp]ackages/*

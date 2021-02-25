@@ -6,14 +6,24 @@ public class CharacterMover : MonoBehaviour
 {
     public float speed = 10;
     public float jumpForce = 10;
+    float groundDist = 0.05f;
     public bool isGrounded;
     private bool jumpInput = false;
 
     CharacterController cc;
-    
+
+    Animator animator;
     Transform cam;
     Vector2 moveInput = new Vector2();
     public Vector3 velocity = new Vector3();
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        cc = GetComponent<CharacterController>();
+        cam = Camera.main.transform;
+        animator = GetComponentInChildren<Animator>();
+    }
 
     // Update is called once per frame
     void Update()
@@ -21,13 +31,9 @@ public class CharacterMover : MonoBehaviour
         moveInput.x = Input.GetAxis("Horizontal");
         moveInput.y = Input.GetAxis("Vertical");
         jumpInput = Input.GetButton("Jump");
-    }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        cc = GetComponent<CharacterController>();
-        cam = Camera.main.transform;
+        animator.SetFloat("Forwards", moveInput.y);
+        animator.SetBool("Jump", !isGrounded);
     }
 
     void FixedUpdate()
@@ -63,13 +69,42 @@ public class CharacterMover : MonoBehaviour
         // apply gravity after zeroing velocity so we register as grounded still
         velocity += Physics.gravity * Time.fixedDeltaTime;
 
-        // and apply this to our positional update this frame
-        //delta += velocity * Time.deltaTime;
+        if (!isGrounded)
+        {
+            hitDirection = Vector3.zero;
+        }
+
+        // slide objects off surfaces they're hanging on to
+        if (moveInput.x == 0 && moveInput.y == 0)
+        {
+            Vector3 horizontalHitDirection = hitDirection;
+            horizontalHitDirection.y = 0;
+            float displacement = horizontalHitDirection.magnitude;
+
+            if (displacement > 0)
+            {
+                RaycastHit hit;
+                if (!Physics.Raycast(transform.position, Vector3.down, out hit, groundDist))
+                {
+                    velocity -= 0.2f * horizontalHitDirection / displacement;
+                }
+            }
+        }
 
         cc.Move(velocity * Time.deltaTime);
         isGrounded = cc.isGrounded;
 
-        transform.forward = camForward;
-
+        if (moveInput.x != 0 || moveInput.y != 0)
+        {
+            transform.forward = camForward;
+            //transform.forward = new Vector3(camForward.x * moveInput.x, camForward.y , camForward.z * moveInput.y);
+        }
     }
+
+    public Vector3 hitDirection;
+    void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        hitDirection = hit.point - transform.position;
+    }
+
 }
