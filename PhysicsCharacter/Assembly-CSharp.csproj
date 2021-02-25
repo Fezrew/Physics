@@ -55,9 +55,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\CharacterMover.cs" />
-     <Compile Include="Assets\Scripts\CameraController.cs" />
      <Compile Include="Assets\Scripts\PhysicsObject.cs" />
+     <Compile Include="Assets\Scripts\CameraController.cs" />
+     <Compile Include="Assets\Scripts\CharacterMover.cs" />
  <Reference Include="Unity.Timeline.Editor">
  <HintPath>C:/Users/s191796/source/repos/Physics/PhysicsCharacter/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
  </Reference>
