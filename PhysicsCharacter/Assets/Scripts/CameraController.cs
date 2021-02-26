@@ -6,7 +6,7 @@ public class CameraController : MonoBehaviour
 {
     public Transform target;
     float heightOffset = 1.5f;
-    public float rotateSpeed = 180;
+    public float rotateSpeed = 50;
     public float distance = 5;
     float currentDistance;
     public float relaxSpeed;
@@ -21,33 +21,31 @@ public class CameraController : MonoBehaviour
     void Start()
     {
         currentDistance = distance;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     // Update is called once per frame
     void Update()
     {
-        // right drag rotates the camera
-        if (Input.GetMouseButton(1))
+
+        Vector3 angles = transform.eulerAngles;
+
+        float dx;
+        float dy = Input.GetAxis("Mouse X");
+        if (invertY)
         {
-            Vector3 angles = transform.eulerAngles;
-
-            float dx;
-            float dy = Input.GetAxis("Mouse X");
-            if (invertY)
-            {
-                dx = Input.GetAxis("Mouse Y");
-            }
-            else
-            {
-                dx = -Input.GetAxis("Mouse Y");
-            }
-
-            // look up and down by rotating around X-axis
-            angles.x = Mathf.Clamp(angles.x + dx * rotateSpeed * Time.deltaTime, 0, 70);
-            // spin the camera round
-            angles.y += dy * rotateSpeed * Time.deltaTime;
-            transform.eulerAngles = angles;
+            dx = Input.GetAxis("Mouse Y");
         }
+        else
+        {
+            dx = -Input.GetAxis("Mouse Y");
+        }
+
+        // look up and down by rotating around X-axis
+        angles.x = Mathf.Clamp(angles.x + dx * rotateSpeed * Time.deltaTime, 0, 70);
+        // spin the camera round
+        angles.y += dy * rotateSpeed * Time.deltaTime;
+        transform.eulerAngles = angles;
 
         RaycastHit hit;
         if (Physics.Raycast(GetTargetPosition(), -transform.forward, out hit, distance))

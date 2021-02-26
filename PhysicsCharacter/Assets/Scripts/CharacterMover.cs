@@ -6,7 +6,7 @@ public class CharacterMover : MonoBehaviour
 {
     public float speed = 10;
     public float jumpForce = 10;
-    float groundDist = 0.05f;
+    float groundDist = 0.1f;
     public bool isGrounded;
     private bool jumpInput = false;
 
