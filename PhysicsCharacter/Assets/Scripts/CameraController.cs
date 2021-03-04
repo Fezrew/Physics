@@ -5,7 +5,7 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     public Transform target;
-    float heightOffset = 1.5f;
+    float heightOffset = 0.75f;
     public float rotateSpeed = 50;
     public float distance = 5;
     float currentDistance;
@@ -50,8 +50,11 @@ public class CameraController : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(GetTargetPosition(), -transform.forward, out hit, distance))
         {
-            // snap the camera right in to where the collision happened
-            currentDistance = hit.distance;
+            if (!hit.collider.CompareTag("Player"))
+            {
+                // snap the camera right in to where the collision happened
+                currentDistance = hit.distance;
+            }
         }
         else
         {

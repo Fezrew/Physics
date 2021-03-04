@@ -12,5 +12,4 @@ public class RagdollTrigger : MonoBehaviour
             ragdoll.RagdollOn = true;
         }
     }
-
 }

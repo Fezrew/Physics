@@ -31,73 +31,95 @@ public class CharacterMover : MonoBehaviour
         moveInput.x = Input.GetAxis("Horizontal");
         moveInput.y = Input.GetAxis("Vertical");
         jumpInput = Input.GetButton("Jump");
+        float move = 0;
 
-        animator.SetFloat("Forwards", moveInput.y);
+        if(moveInput.x > 0)
+        {
+            move += moveInput.x;
+        }
+        if (moveInput.x < 0)
+        {
+            move -= moveInput.x;
+        }
+        if (moveInput.y > 0)
+        {
+            move += moveInput.y;
+        }
+        if (moveInput.y < 0)
+        {
+            move -= moveInput.y;
+        }
+
+        animator.SetFloat("Forwards", move);
         animator.SetBool("Jump", !isGrounded);
     }
 
     void FixedUpdate()
     {
-        Vector3 delta;
-
-        // find the horizontal unit vector facing forward from the camera
-        Vector3 camForward = cam.forward;
-        camForward.y = 0;
-        camForward.Normalize();
-
-        // use our camera's right vector, which is always horizontal
-        Vector3 camRight = cam.right;
-        delta = (moveInput.x * camRight + moveInput.y * camForward) * speed * Time.fixedDeltaTime;
-
-        if (isGrounded || moveInput.x != 0 || moveInput.y != 0)
+        if (animator.enabled)
         {
-            velocity.x = delta.x;
-            velocity.z = delta.z;
-        }
+            Vector3 delta;
 
-        // check for jumping
-        if (jumpInput && isGrounded)
-        {
-            velocity.y = jumpForce;
-        }
+            // find the horizontal unit vector facing forward from the camera
+            Vector3 camForward = cam.forward;
+            camForward.y = 0;
+            camForward.Normalize();
 
-        if (isGrounded && velocity.y < 0)
-        {
-            velocity.y = 0;
-        }
+            // use our camera's right vector, which is always horizontal
+            Vector3 camRight = cam.right;
+            delta = (moveInput.x * camRight + moveInput.y * camForward) * speed * Time.fixedDeltaTime;
 
-        // apply gravity after zeroing velocity so we register as grounded still
-        velocity += Physics.gravity * Time.fixedDeltaTime;
-
-        if (!isGrounded)
-        {
-            hitDirection = Vector3.zero;
-        }
-
-        // slide objects off surfaces they're hanging on to
-        if (moveInput.x == 0 && moveInput.y == 0)
-        {
-            Vector3 horizontalHitDirection = hitDirection;
-            horizontalHitDirection.y = 0;
-            float displacement = horizontalHitDirection.magnitude;
-
-            if (displacement > 0)
+            if (isGrounded || moveInput.x != 0 || moveInput.y != 0)
             {
-                RaycastHit hit;
-                if (!Physics.Raycast(transform.position, Vector3.down, out hit, groundDist))
+                velocity.x = delta.x;
+                velocity.z = delta.z;
+            }
+
+            // check for jumping
+            if (jumpInput && isGrounded)
+            {
+                velocity.y = jumpForce;
+            }
+
+            if (isGrounded && velocity.y < 0)
+            {
+                velocity.y = 0;
+            }
+
+            // apply gravity after zeroing velocity so we register as grounded still
+            velocity += Physics.gravity * Time.fixedDeltaTime;
+
+            if (!isGrounded)
+            {
+                hitDirection = Vector3.zero;
+            }
+
+            // slide objects off surfaces they're hanging on to
+            if (moveInput.x == 0 && moveInput.y == 0)
+            {
+                Vector3 horizontalHitDirection = hitDirection;
+                horizontalHitDirection.y = 0;
+                float displacement = horizontalHitDirection.magnitude;
+
+                if (displacement > 0)
                 {
-                    velocity -= 0.2f * horizontalHitDirection / displacement;
+                    RaycastHit hit;
+                    if (!Physics.Raycast(transform.position, Vector3.down, out hit, groundDist))
+                    {
+                        velocity -= 0.2f * horizontalHitDirection / displacement;
+                    }
                 }
             }
-        }
 
-        cc.Move(velocity * Time.deltaTime);
-        isGrounded = cc.isGrounded;
+            cc.Move(velocity * Time.deltaTime);
+            isGrounded = cc.isGrounded;
 
-        if (moveInput.x != 0 || moveInput.y != 0)
-        {
-            transform.forward = camForward;
-            //transform.forward = new Vector3(camForward.x * moveInput.x, camForward.y , camForward.z * moveInput.y);
+            if (moveInput.x != 0 || moveInput.y != 0)
+            {
+                //transform.forward = camForward;
+                //Rotate the model to face a direction relative to the direction of movement
+                transform.forward = new Vector3(velocity.x, transform.forward.y, velocity.z);
+            }
         }
     }
 
