@@ -5,11 +5,23 @@ using UnityEngine;
 [RequireComponent(typeof(Animator))]
 public class Ragdoll : MonoBehaviour
 {
-    private float timer = 0;
+    [Range(1,5)]
     public float interval;
+
+    private float timer = 0;
     private Animator animator = null;
     private Vector3 prevPosition;
+
+    [SerializeField]
+    private Vector3 hipCurrPosition;
+    [SerializeField]
+    private Vector3 hipPrePosition;
+    [SerializeField]
+    private Vector3 postTransform;
+    [SerializeField]
+    private Vector3 finPosition;
     public Transform hips;
+
     public List<Rigidbody> rigidbodies = new List<Rigidbody>();
     public List<Collider> colliders = new List<Collider>();
     public bool RagdollOn
@@ -39,6 +51,7 @@ public class Ragdoll : MonoBehaviour
         foreach (Rigidbody r in rigidbodies)
         {
             r.isKinematic = true;
+            r.mass = r.mass * 0.01f;
         }
     }
 
@@ -59,11 +72,23 @@ public class Ragdoll : MonoBehaviour
                     {
                         if (prevPosition.z > transform.position.z - 1 || prevPosition.z < transform.position.z + 1)
                         {
+                            hipPrePosition = hips.position;
+
                             foreach (Collider c in colliders)
                             {
-                                c.transform.position = new Vector3(hips.position.x, hips.position.y + 1, hips.position.z);
+                                RaycastHit hit;
+                                if (Physics.Raycast(hipPrePosition, -transform.up, out hit, 1))
+                                {
+                                    if (!hit.collider.CompareTag("Player"))
+                                    {
+                                        c.transform.position = new Vector3(hipPrePosition.x, hit.point.y + 0.3f, hipPrePosition.z);
+                                    }
+                                }
                             }
+
+                            postTransform = transform.position;
                             RagdollOn = false;
+                            finPosition = transform.position;
                         }
                     }
                 }
@@ -71,5 +96,6 @@ public class Ragdoll : MonoBehaviour
                 prevPosition = transform.position;
             }
         }
+        hipCurrPosition = hips.position;
     }
 }

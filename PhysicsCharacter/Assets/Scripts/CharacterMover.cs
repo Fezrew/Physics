@@ -52,6 +52,11 @@ public class CharacterMover : MonoBehaviour
 
         animator.SetFloat("Forwards", move);
         animator.SetBool("Jump", !isGrounded);
+
+        if (!cc.enabled)
+        {
+            velocity = new Vector3(0, 0, 0);
+        }
     }
 
     void FixedUpdate()
