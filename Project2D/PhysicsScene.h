@@ -42,6 +42,8 @@ public:
 	static bool box2Sphere(PhysicsObject*, PhysicsObject*);
 	static bool box2Box(PhysicsObject*, PhysicsObject*);
 
+	static void shipCollision(RigidBody* obj1, RigidBody* obj2);
+
 protected:
 	static vec2 m_gravity;
 	float m_timeStep;

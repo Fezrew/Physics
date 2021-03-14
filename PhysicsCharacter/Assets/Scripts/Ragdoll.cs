@@ -40,6 +40,10 @@ public class Ragdoll : MonoBehaviour
             foreach (Collider c in colliders)
             {
                 c.enabled = !value;
+                if(c.enabled)
+                {
+                    animator.SetTrigger("GetUp");
+                }
             }
         }
     }
@@ -88,6 +92,7 @@ public class Ragdoll : MonoBehaviour
 
                             postTransform = transform.position;
                             RagdollOn = false;
+
                             finPosition = transform.position;
                         }
                     }

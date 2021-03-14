@@ -1,6 +1,6 @@
 #include "Ship.h"
 
-Ship::Ship(vec2 position, float acceleration, float speedCap, float turnSpeed, float orientation, vec4 colour)
+Ship::Ship(vec2 position, float acceleration, float speedCap, float turnSpeed, float orientation, vec4 colour, aie::EInputCodes inputLeft, aie::EInputCodes inputRight)
 	: PhysicsObject(SHIP, colour)
 {
 	m_position = position;
@@ -11,6 +11,8 @@ Ship::Ship(vec2 position, float acceleration, float speedCap, float turnSpeed, f
 	m_colour = colour;
 	m_velocity = vec2(0, 0);
 	m_mass = 0;
+	m_left = inputLeft;
+	m_right = inputRight;
 
 	ball = new Sphere(m_position, vec2(0, 0), 0, m_orientation, 0.5f, 1.5f, vec4(1, 1, 1, 1));
 	ball->setShip(this);
@@ -39,11 +41,11 @@ void Ship::fixedUpdate(vec2 gravity, float timeStep)
 	ball->setPosition(m_position);
 	ball->setOrientation(m_orientation);
 
-	if (input->isKeyDown(INPUT_KEY_A))
+	if (input->isKeyDown(m_left))
 	{
 		m_orientation += m_turnSpeed;
 	}
-	else if (input->isKeyDown(INPUT_KEY_D))
+	else if (input->isKeyDown(m_right))
 	{
 		m_orientation -= m_turnSpeed;
 	}
@@ -84,6 +86,10 @@ void Ship::shipContact(vec2 contact)
 	{
 		shipParts[i]->setPosition(m_position + (shipParts[i]->getLocalPos() * shipOrientation));
 	}
+}
+
+void Ship::shipDestroy()
+{
 }
 
 void Ship::draw()

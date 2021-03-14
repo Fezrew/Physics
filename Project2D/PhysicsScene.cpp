@@ -122,9 +122,6 @@ void PhysicsScene::ApplyContactForces(RigidBody* body1, RigidBody* body2, vec2 n
 	{
 		body1Factor = body2Mass / (body1->getShip()->getMass() + body2Mass);
 		body1->getShip()->shipContact(body1->getShip()->getPosition() - body1Factor * norm * pen);
-
-		//body1Factor = body2Mass / (body1->getMass() + body2Mass);
-		//body1->setPosition(body1->getPosition() - body1Factor * norm * pen);
 	}
 	else
 	{
@@ -222,17 +219,24 @@ bool PhysicsScene::sphere2Sphere(PhysicsObject* obj1, PhysicsObject* obj2)
 
 	if (sphere1 != nullptr && sphere2 != nullptr)
 	{
-		float dist = distance(sphere1->getPosition(), sphere2->getPosition());
-		if (dist <= sphere1->getRadius() + sphere2->getRadius())
+		if (sphere1->isShip() || sphere2->isShip())
 		{
-			float penetration = sphere1->getRadius() + sphere2->getRadius() - dist;
-			if (penetration > 0)
+			shipCollision(sphere1, sphere2);
+		}
+		else
+		{
+			float dist = distance(sphere1->getPosition(), sphere2->getPosition());
+			if (dist <= sphere1->getRadius() + sphere2->getRadius())
 			{
-				sphere1->resolveCollision(sphere2, (sphere1->getPosition() + sphere2->getPosition()) * 0.5f, nullptr, penetration);
+				float penetration = sphere1->getRadius() + sphere2->getRadius() - dist;
+				if (penetration > 0)
+				{
+					sphere1->resolveCollision(sphere2, (sphere1->getPosition() + sphere2->getPosition()) * 0.5f, nullptr, penetration);
+				}
+
+
+				return true;
 			}
-
-
-			return true;
 		}
 	}
 
@@ -254,40 +258,47 @@ bool PhysicsScene::box2Sphere(PhysicsObject* obj1, PhysicsObject* obj2)
 
 	if (box != nullptr && sphere != nullptr)
 	{
-		vec2 circlePosWorld = sphere->getPosition() - box->getPosition();
-		vec2 circlePosBox = vec2(dot(circlePosWorld, box->getLocalX()), dot(circlePosWorld, box->getLocalY()));
+		if (box->isShip() || sphere->isShip())
+		{
+			shipCollision(box, sphere);
+		}
+		else
+		{
+			vec2 circlePosWorld = sphere->getPosition() - box->getPosition();
+			vec2 circlePosBox = vec2(dot(circlePosWorld, box->getLocalX()), dot(circlePosWorld, box->getLocalY()));
 
-		vec2 closestPointOnBoxBox = circlePosBox;
-		vec2 extents = box->getExtents();
+			vec2 closestPointOnBoxBox = circlePosBox;
+			vec2 extents = box->getExtents();
 
 #pragma region Clamping
-		if (closestPointOnBoxBox.x < -extents.x)
-		{
-			closestPointOnBoxBox.x = -extents.x;
-		}
-		if (closestPointOnBoxBox.x > extents.x)
-		{
-			closestPointOnBoxBox.x = extents.x;
-		}
-		if (closestPointOnBoxBox.y < -extents.y)
-		{
-			closestPointOnBoxBox.y = -extents.y;
-		}
-		if (closestPointOnBoxBox.y > extents.y)
-		{
-			closestPointOnBoxBox.y = extents.y;
-		}
+			if (closestPointOnBoxBox.x < -extents.x)
+			{
+				closestPointOnBoxBox.x = -extents.x;
+			}
+			if (closestPointOnBoxBox.x > extents.x)
+			{
+				closestPointOnBoxBox.x = extents.x;
+			}
+			if (closestPointOnBoxBox.y < -extents.y)
+			{
+				closestPointOnBoxBox.y = -extents.y;
+			}
+			if (closestPointOnBoxBox.y > extents.y)
+			{
+				closestPointOnBoxBox.y = extents.y;
+			}
 #pragma endregion
 
-		vec2 closestPointOnBoxWorld = box->getPosition() + closestPointOnBoxBox.x * box->getLocalX() + closestPointOnBoxBox.y * box->getLocalY();
-		vec2 circleToBox = sphere->getPosition() - closestPointOnBoxWorld;
+			vec2 closestPointOnBoxWorld = box->getPosition() + closestPointOnBoxBox.x * box->getLocalX() + closestPointOnBoxBox.y * box->getLocalY();
+			vec2 circleToBox = sphere->getPosition() - closestPointOnBoxWorld;
 
-		float penetration = sphere->getRadius() - glm::length(circleToBox);
-		if (penetration > 0)
-		{
-			vec2 direction = normalize(circleToBox);
-			vec2 contact = closestPointOnBoxWorld;
-			box->resolveCollision(sphere, contact, &direction, penetration);
+			float penetration = sphere->getRadius() - glm::length(circleToBox);
+			if (penetration > 0)
+			{
+				vec2 direction = normalize(circleToBox);
+				vec2 contact = closestPointOnBoxWorld;
+				box->resolveCollision(sphere, contact, &direction, penetration);
+			}
 		}
 	}
 
@@ -298,28 +309,88 @@ bool PhysicsScene::box2Box(PhysicsObject* obj1, PhysicsObject* obj2)
 	Box* box1 = dynamic_cast<Box*>(obj1);
 	Box* box2 = dynamic_cast<Box*>(obj2);
 
+
 	if (box1 != nullptr && box2 != nullptr)
 	{
-		glm::vec2 boxPos = box2->getPosition() - box1->getPosition();
-		glm::vec2 norm(0, 0);
-		glm::vec2 contact(0, 0);
-		float pen = 0;
-		int numContacts = 0;
-
-		box1->checkBoxCorners(*box2, contact, numContacts, pen, norm);
-
-		if (box2->checkBoxCorners(*box1, contact, numContacts, pen, norm)) {
-			norm = -norm;
-		}
-
-		if (pen > 0)
+		if (box1->isShip() || box2->isShip())
 		{
-			box1->resolveCollision(box2, contact / float(numContacts), &norm, pen);
+			shipCollision(box1, box2);
 		}
-		return true;
+		else
+		{
+			glm::vec2 boxPos = box2->getPosition() - box1->getPosition();
+			glm::vec2 norm(0, 0);
+			glm::vec2 contact(0, 0);
+			float pen = 0;
+			int numContacts = 0;
+
+			box1->checkBoxCorners(*box2, contact, numContacts, pen, norm);
+
+			if (box2->checkBoxCorners(*box1, contact, numContacts, pen, norm)) {
+				norm = -norm;
+			}
+
+			if (pen > 0)
+			{
+				box1->resolveCollision(box2, contact / float(numContacts), &norm, pen);
+			}
+			return true;
+		}
 	}
 	return false;
 
+}
+
+void PhysicsScene::shipCollision(RigidBody* obj1, RigidBody* obj2)
+{
+	if (obj1->isShip() && obj2->isShip())
+	{
+		if (obj1->getShip() != obj2->getShip())
+		{
+			if (obj1->getShip()->getMass() < obj2->getMass())
+			{
+				//If ship1 is lighter than ship2
+				//obj1->getShip()->shipDestroy();
+			}
+			else if (obj2->getShip()->getMass() < obj1->getMass())
+			{
+				//If ship1 is heavier than ship2
+
+			}
+			else
+			{
+				//If the ships are the same weight
+
+			}
+
+		}
+	}
+	else if (obj1->isShip())
+	{
+		if (obj1->getShip()->getMass() <= obj2->getMass())
+		{
+			//If the object is heavier or as heavy as the ship
+
+		}
+		else
+		{
+			//If the object is lighter than the ship
+
+		}
+	}
+	else if (obj2->isShip())
+	{
+		if (obj2->getShip()->getMass() <= obj1->getMass())
+		{
+			//If the object is heavier or as heavy as the ship
+
+		}
+		else
+		{
+			//If the object is lighter than the ship
+
+		}
+	}
 }
 #pragma endregion
 #pragma endregion
