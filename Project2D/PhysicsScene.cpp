@@ -43,7 +43,7 @@ void PhysicsScene::update(float dt)
 
 		int actorCount = m_actors.size();
 
-		if (timer > m_timeStep * 10)
+		if (timer > 1)
 		{
 			checkForCollision();
 		}
@@ -360,7 +360,7 @@ void PhysicsScene::shipCollision(RigidBody* obj1, RigidBody* obj2)
 				//If ship1 is heavier than ship2
 				obj2->getShip()->shipBreak();
 			}
-			else
+			else if (obj1->getShip()->getMass() == obj2->getShip()->getMass())
 			{
 				//If the ships are the same weight
 				obj1->getShip()->shipBreak();
@@ -369,7 +369,7 @@ void PhysicsScene::shipCollision(RigidBody* obj1, RigidBody* obj2)
 
 		}
 	}
-	else if (obj1->isShip())
+	else if (obj1->isShip() && obj2->isShip() == false)
 	{
 		if (obj1->getShip()->getMass() <= obj2->getMass())
 		{
@@ -382,7 +382,7 @@ void PhysicsScene::shipCollision(RigidBody* obj1, RigidBody* obj2)
 
 		}
 	}
-	else if (obj2->isShip())
+	else if (obj2->isShip() && obj1->isShip() == false)
 	{
 		if (obj2->getShip()->getMass() <= obj1->getMass())
 		{
