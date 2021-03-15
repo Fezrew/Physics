@@ -19,6 +19,7 @@ public:
 	virtual void setPosition(vec2 position) {}
 	virtual vec2 getPosition() { return vec2(0, 0); }
 	virtual void shipContact(vec2 contact) {}
+	virtual void shipBreak() {}
 	virtual void draw();
 
 

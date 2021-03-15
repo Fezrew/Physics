@@ -3,6 +3,7 @@
 #include "Box.h"
 
 vec2 PhysicsScene::m_gravity;
+float timer = 0;
 
 PhysicsScene::~PhysicsScene()
 {
@@ -29,6 +30,7 @@ void PhysicsScene::update(float dt)
 {
 	static float accumulatedTime = 0.0f;
 	accumulatedTime += dt;
+	timer += dt;
 
 	while (accumulatedTime >= m_timeStep)
 	{
@@ -41,7 +43,10 @@ void PhysicsScene::update(float dt)
 
 		int actorCount = m_actors.size();
 
-		checkForCollision();
+		if (timer > m_timeStep * 10)
+		{
+			checkForCollision();
+		}
 
 		cout << "Total energy: " << getTotalEnergy() << endl;
 	}
@@ -96,8 +101,6 @@ void PhysicsScene::checkForCollision()
 			{
 				continue;
 			}
-
-			// todo - check if these two objects can interact (eg rocket body and rockethead)
 
 			//Function pointer time
 			int functionIDx = (shapeID1 * SHAPE_COUNT) + shapeID2;
@@ -347,20 +350,21 @@ void PhysicsScene::shipCollision(RigidBody* obj1, RigidBody* obj2)
 	{
 		if (obj1->getShip() != obj2->getShip())
 		{
-			if (obj1->getShip()->getMass() < obj2->getMass())
+			if (obj1->getShip()->getMass() < obj2->getShip()->getMass())
 			{
 				//If ship1 is lighter than ship2
-				//obj1->getShip()->shipDestroy();
+				obj1->getShip()->shipBreak();
 			}
-			else if (obj2->getShip()->getMass() < obj1->getMass())
+			else if (obj2->getShip()->getMass() < obj1->getShip()->getMass())
 			{
 				//If ship1 is heavier than ship2
-
+				obj2->getShip()->shipBreak();
 			}
 			else
 			{
 				//If the ships are the same weight
-
+				obj1->getShip()->shipBreak();
+				obj2->getShip()->shipBreak();
 			}
 
 		}
@@ -370,7 +374,7 @@ void PhysicsScene::shipCollision(RigidBody* obj1, RigidBody* obj2)
 		if (obj1->getShip()->getMass() <= obj2->getMass())
 		{
 			//If the object is heavier or as heavy as the ship
-
+			obj1->getShip()->shipBreak();
 		}
 		else
 		{
@@ -383,7 +387,7 @@ void PhysicsScene::shipCollision(RigidBody* obj1, RigidBody* obj2)
 		if (obj2->getShip()->getMass() <= obj1->getMass())
 		{
 			//If the object is heavier or as heavy as the ship
-
+			obj2->getShip()->shipBreak();
 		}
 		else
 		{

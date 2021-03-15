@@ -37,6 +37,7 @@ public:
 	virtual vec2 getPosition() = 0;
 	virtual void setPosition(vec2 position) = 0;
 	virtual void shipContact(vec2 contact) = 0;
+	virtual void shipBreak() = 0;
 	vec4 getColour() { return m_colour; }
 	ShapeType getShapeID() { return m_shapeID; }
 };

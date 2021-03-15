@@ -22,7 +22,6 @@ Ship::Ship(vec2 position, float acceleration, float speedCap, float turnSpeed, f
 
 Ship::~Ship()
 {
-
 }
 
 void Ship::fixedUpdate(vec2 gravity, float timeStep)
@@ -78,6 +77,11 @@ void Ship::addToShip(RigidBody* rb, vec2 localPos, float localOri)
 	rb->setVelocity(m_velocity);
 }
 
+void Ship::removeFromShip(RigidBody* rb)
+{
+	rb->setShip(nullptr);
+}
+
 void Ship::shipContact(vec2 contact)
 {
 	setPosition(contact);
@@ -88,8 +92,14 @@ void Ship::shipContact(vec2 contact)
 	}
 }
 
-void Ship::shipDestroy()
+void Ship::shipBreak()
 {
+	for (int i = shipParts.size(); i != 0; i--)
+	{
+		removeFromShip(shipParts[i - 1]);
+		shipParts.pop_back();
+	}
+	//delete ball;
 }
 
 void Ship::draw()

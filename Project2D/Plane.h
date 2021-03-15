@@ -17,6 +17,7 @@ public:
 	virtual vec2 getPosition() { return vec2(0, 0); }
 	virtual void setPosition(vec2 position) {}
 	virtual void shipContact(vec2 contact) {}
+	virtual void shipBreak() {}
 	void resolveCollision(RigidBody* actor2, vec2 contact);
 
 	vec2 getNormal() { return m_normal; }

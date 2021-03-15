@@ -18,8 +18,9 @@ public:
 	virtual vec2 getPosition() { return m_position; }
 
 	void addToShip(RigidBody* rb, vec2 localPos, float localOri);
+	void removeFromShip(RigidBody* rb);
 	virtual void shipContact(vec2 contact);
-	void shipDestroy();
+	virtual void shipBreak();
 
 	vec2 getVelocity() { return m_velocity; }
 	float getSpeed() { return m_acceleration; }

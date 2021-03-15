@@ -16,6 +16,7 @@ public:
 	virtual void fixedUpdate(vec2 gravity, float timeStep);
 	virtual void applyForce(vec2 force) {}
 	virtual void shipContact(vec2 contact) {}
+	virtual void shipBreak() {}
 	void applyForce(vec2 force, vec2 pos);
 	void resolveCollision(RigidBody* actor2, vec2 contact, vec2* collisionNormal = nullptr, float pen = 0);
 
