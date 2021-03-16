@@ -20,7 +20,7 @@ public class Ragdoll : MonoBehaviour
     private Vector3 postTransform;
     [SerializeField]
     private Vector3 finPosition;
-    public Transform hips;
+    public Rigidbody hips;
 
     public List<Rigidbody> rigidbodies = new List<Rigidbody>();
     public List<Collider> colliders = new List<Collider>();
@@ -76,7 +76,7 @@ public class Ragdoll : MonoBehaviour
                     {
                         if (prevPosition.z > transform.position.z - 1 || prevPosition.z < transform.position.z + 1)
                         {
-                            hipPrePosition = hips.position;
+                            hipPrePosition = hips.transform.position;
 
                             foreach (Collider c in colliders)
                             {
@@ -101,6 +101,6 @@ public class Ragdoll : MonoBehaviour
                 prevPosition = transform.position;
             }
         }
-        hipCurrPosition = hips.position;
+        hipCurrPosition = hips.transform.position;
     }
 }

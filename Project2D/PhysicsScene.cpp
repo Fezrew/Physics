@@ -371,7 +371,7 @@ void PhysicsScene::shipCollision(RigidBody* obj1, RigidBody* obj2)
 	}
 	else if (obj1->isShip() && obj2->isShip() == false)
 	{
-		if (obj1->getShip()->getMass() <= obj2->getMass())
+		if (obj1->getShip()->getMass() <= obj2->getMass() || obj2->isKinematic())
 		{
 			//If the object is heavier or as heavy as the ship
 			obj1->getShip()->shipBreak();
@@ -384,7 +384,7 @@ void PhysicsScene::shipCollision(RigidBody* obj1, RigidBody* obj2)
 	}
 	else if (obj2->isShip() && obj1->isShip() == false)
 	{
-		if (obj2->getShip()->getMass() <= obj1->getMass())
+		if (obj2->getShip()->getMass() <= obj1->getMass() || obj2->isKinematic())
 		{
 			//If the object is heavier or as heavy as the ship
 			obj2->getShip()->shipBreak();

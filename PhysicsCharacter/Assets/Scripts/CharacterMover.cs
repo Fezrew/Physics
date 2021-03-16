@@ -6,6 +6,7 @@ public class CharacterMover : MonoBehaviour
 {
     public float speed = 10;
     public float jumpForce = 10;
+    public float yeetForce = 1;
     float groundDist = 0.1f;
     public bool isGrounded;
     private bool jumpInput = false;
@@ -14,6 +15,7 @@ public class CharacterMover : MonoBehaviour
 
     Animator animator;
     Transform cam;
+    Ragdoll ragdoll;
     Vector2 moveInput = new Vector2();
     public Vector3 velocity = new Vector3();
 
@@ -23,6 +25,7 @@ public class CharacterMover : MonoBehaviour
         cc = GetComponent<CharacterController>();
         cam = Camera.main.transform;
         animator = GetComponentInChildren<Animator>();
+        ragdoll = GetComponent<Ragdoll>();
     }
 
     // Update is called once per frame
@@ -33,7 +36,7 @@ public class CharacterMover : MonoBehaviour
         jumpInput = Input.GetButton("Jump");
         float move = 0;
 
-        if(moveInput.x > 0)
+        if (moveInput.x > 0)
         {
             move += moveInput.x;
         }
@@ -48,6 +51,16 @@ public class CharacterMover : MonoBehaviour
         if (moveInput.y < 0)
         {
             move -= moveInput.y;
+        }
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            //When you mouse click, throw the player into a ragdoll in the opposite direction of the camera's forward
+            if (ragdoll != null && !ragdoll.RagdollOn)
+            {
+                ragdoll.RagdollOn = true;
+                ragdoll.hips.AddForce(new Vector3(cam.forward.x * -yeetForce, cam.forward.y * -yeetForce, cam.forward.z * -yeetForce));
+                //velocity = new Vector3(cam.forward.x * -yeetForce, cam.forward.y * -yeetForce, cam.forward.z * -yeetForce);
+            }
         }
 
         animator.SetFloat("Forwards", move);
@@ -121,9 +134,11 @@ public class CharacterMover : MonoBehaviour
 
             if (moveInput.x != 0 || moveInput.y != 0)
             {
-                //transform.forward = camForward;
+                //Rotate the model to match the cameras forward
+                transform.forward = camForward;
+
                 //Rotate the model to face a direction relative to the direction of movement
-                transform.forward = new Vector3(velocity.x, transform.forward.y, velocity.z);
+                //transform.forward = new Vector3(velocity.x, transform.forward.y, velocity.z);
             }
         }
     }
