@@ -78,7 +78,7 @@ bool PhysicsApp::startup()
 	//wall->setKinematic(true);
 	//
 	Box* wall2 = new Box(vec2(90, -50), vec2(0, 0), 0, 0, 400.0f, vec4(1, 1, 1, 1), 3, 3);
-	m_physicsScene->addActor(wall2);
+	//m_physicsScene->addActor(wall2);
 	wall2->setKinematic(true);
 	//
 	//vector<std::string> sb;
