@@ -45,5 +45,6 @@ protected:
 	Input* input;
 	Sphere* ball;
 	vector<RigidBody*> shipParts;
+	bool shipBroke = false;
 };
 

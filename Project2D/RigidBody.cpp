@@ -75,6 +75,26 @@ void RigidBody::resolveCollision(RigidBody* actor2, vec2 contact, vec2* collisio
 
 	if (v1 > v2)
 	{
+		if (this->isShip() || actor2->isShip())
+		{
+			if (this->isShip() && actor2->isShip())
+			{
+				if (this->getShip() != actor2->getShip())
+				{
+					this->setShipCollided(true);
+					actor2->setShipCollided(true);
+				}
+			}
+			else if (this->isShip() && actor2->isShip() == false)
+			{
+				this->setShipCollided(true);
+			}
+			else if (actor2->isShip() && this->isShip() == false)
+			{
+				actor2->setShipCollided(true);
+			}
+			return;
+		}
 		float mass1 = 1.0f / (1.0f / getMass() + (r1 * r1) / getMoment());
 		float mass2 = 1.0f / (1.0f / actor2->getMass() + (r2 * r2) / actor2->getMoment());
 

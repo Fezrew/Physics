@@ -99,10 +99,13 @@ void Ship::shipBreak()
 		removeFromShip(shipParts[i - 1]);
 		shipParts.pop_back();
 	}
-	//delete ball;
+	shipBroke = true;
 }
 
 void Ship::draw()
 {
-	ball->draw();
+	if (!shipBroke)
+	{
+		ball->draw();
+	}
 }

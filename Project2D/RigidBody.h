@@ -41,6 +41,9 @@ public:
 	PhysicsObject* getShip() { return m_ship; }
 	void setShip(PhysicsObject* ship) { m_ship = ship; }
 	bool isShip() { return m_ship != nullptr; }
+	void setShipCollided(bool state) { shipCollided = state; }
+	bool hasShipCollided() { return shipCollided != false; }
+
 
 	void setLocalOrientation(float localOrientation) { m_localOrientation = localOrientation * (pi<float>() / 180.0f); }
 	float getLocalOrientation() { return m_localOrientation; }
@@ -63,6 +66,7 @@ protected:
 	float m_localOrientation;
 
 	PhysicsObject* m_ship = nullptr;
+	bool shipCollided = false;
 
 	vec2 m_localPos;
 	vec2 m_localX;

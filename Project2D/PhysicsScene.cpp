@@ -222,24 +222,21 @@ bool PhysicsScene::sphere2Sphere(PhysicsObject* obj1, PhysicsObject* obj2)
 
 	if (sphere1 != nullptr && sphere2 != nullptr)
 	{
-		if (sphere1->isShip() || sphere2->isShip())
+		float dist = distance(sphere1->getPosition(), sphere2->getPosition());
+		if (dist <= sphere1->getRadius() + sphere2->getRadius())
 		{
-			shipCollision(sphere1, sphere2);
-		}
-		else
-		{
-			float dist = distance(sphere1->getPosition(), sphere2->getPosition());
-			if (dist <= sphere1->getRadius() + sphere2->getRadius())
+			float penetration = sphere1->getRadius() + sphere2->getRadius() - dist;
+			if (penetration > 0)
 			{
-				float penetration = sphere1->getRadius() + sphere2->getRadius() - dist;
-				if (penetration > 0)
+				sphere1->resolveCollision(sphere2, (sphere1->getPosition() + sphere2->getPosition()) * 0.5f, nullptr, penetration);
+
+				//If either part is a ship, ship collide
+				if (sphere1->hasShipCollided() || sphere2->hasShipCollided())
 				{
-					sphere1->resolveCollision(sphere2, (sphere1->getPosition() + sphere2->getPosition()) * 0.5f, nullptr, penetration);
+					shipCollision(sphere1, sphere2);
 				}
-
-
-				return true;
 			}
+			return true;
 		}
 	}
 
@@ -261,50 +258,48 @@ bool PhysicsScene::box2Sphere(PhysicsObject* obj1, PhysicsObject* obj2)
 
 	if (box != nullptr && sphere != nullptr)
 	{
-		if (box->isShip() || sphere->isShip())
-		{
-			shipCollision(box, sphere);
-		}
-		else
-		{
-			vec2 circlePosWorld = sphere->getPosition() - box->getPosition();
-			vec2 circlePosBox = vec2(dot(circlePosWorld, box->getLocalX()), dot(circlePosWorld, box->getLocalY()));
+		vec2 circlePosWorld = sphere->getPosition() - box->getPosition();
+		vec2 circlePosBox = vec2(dot(circlePosWorld, box->getLocalX()), dot(circlePosWorld, box->getLocalY()));
 
-			vec2 closestPointOnBoxBox = circlePosBox;
-			vec2 extents = box->getExtents();
+		vec2 closestPointOnBoxBox = circlePosBox;
+		vec2 extents = box->getExtents();
 
 #pragma region Clamping
-			if (closestPointOnBoxBox.x < -extents.x)
-			{
-				closestPointOnBoxBox.x = -extents.x;
-			}
-			if (closestPointOnBoxBox.x > extents.x)
-			{
-				closestPointOnBoxBox.x = extents.x;
-			}
-			if (closestPointOnBoxBox.y < -extents.y)
-			{
-				closestPointOnBoxBox.y = -extents.y;
-			}
-			if (closestPointOnBoxBox.y > extents.y)
-			{
-				closestPointOnBoxBox.y = extents.y;
-			}
+		if (closestPointOnBoxBox.x < -extents.x)
+		{
+			closestPointOnBoxBox.x = -extents.x;
+		}
+		if (closestPointOnBoxBox.x > extents.x)
+		{
+			closestPointOnBoxBox.x = extents.x;
+		}
+		if (closestPointOnBoxBox.y < -extents.y)
+		{
+			closestPointOnBoxBox.y = -extents.y;
+		}
+		if (closestPointOnBoxBox.y > extents.y)
+		{
+			closestPointOnBoxBox.y = extents.y;
+		}
 #pragma endregion
 
-			vec2 closestPointOnBoxWorld = box->getPosition() + closestPointOnBoxBox.x * box->getLocalX() + closestPointOnBoxBox.y * box->getLocalY();
-			vec2 circleToBox = sphere->getPosition() - closestPointOnBoxWorld;
+		vec2 closestPointOnBoxWorld = box->getPosition() + closestPointOnBoxBox.x * box->getLocalX() + closestPointOnBoxBox.y * box->getLocalY();
+		vec2 circleToBox = sphere->getPosition() - closestPointOnBoxWorld;
 
-			float penetration = sphere->getRadius() - glm::length(circleToBox);
-			if (penetration > 0)
+		float penetration = sphere->getRadius() - glm::length(circleToBox);
+		if (penetration > 0)
+		{
+			vec2 direction = normalize(circleToBox);
+			vec2 contact = closestPointOnBoxWorld;
+			box->resolveCollision(sphere, contact, &direction, penetration);
+
+			//If either part is a ship, ship collide
+			if (box->hasShipCollided() || sphere->hasShipCollided())
 			{
-				vec2 direction = normalize(circleToBox);
-				vec2 contact = closestPointOnBoxWorld;
-				box->resolveCollision(sphere, contact, &direction, penetration);
+				shipCollision(box, sphere);
 			}
 		}
 	}
-
 	return false;
 }
 bool PhysicsScene::box2Box(PhysicsObject* obj1, PhysicsObject* obj2)
@@ -315,12 +310,6 @@ bool PhysicsScene::box2Box(PhysicsObject* obj1, PhysicsObject* obj2)
 
 	if (box1 != nullptr && box2 != nullptr)
 	{
-		if (box1->isShip() || box2->isShip())
-		{
-			shipCollision(box1, box2);
-		}
-		else
-		{
 			glm::vec2 boxPos = box2->getPosition() - box1->getPosition();
 			glm::vec2 norm(0, 0);
 			glm::vec2 contact(0, 0);
@@ -336,9 +325,14 @@ bool PhysicsScene::box2Box(PhysicsObject* obj1, PhysicsObject* obj2)
 			if (pen > 0)
 			{
 				box1->resolveCollision(box2, contact / float(numContacts), &norm, pen);
+
+				//If either part is a ship, ship collide
+				if (box1->hasShipCollided() || box2->hasShipCollided())
+				{
+					shipCollision(box1, box2);
+				}
 			}
 			return true;
-		}
 	}
 	return false;
 
