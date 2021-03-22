@@ -75,26 +75,46 @@ void RigidBody::resolveCollision(RigidBody* actor2, vec2 contact, vec2* collisio
 
 	if (v1 > v2)
 	{
-		if (this->isShip() || actor2->isShip())
+		if (this->isShip() && actor2->isShip())
 		{
-			if (this->isShip() && actor2->isShip())
+			if (this->getShip() != actor2->getShip())
 			{
-				if (this->getShip() != actor2->getShip())
+				if (this->getShip()->getMass() < actor2->getShip()->getMass())
 				{
+					//If ship1 is lighter than ship2
+					this->setShipCollided(true);
+				}
+				else if (actor2->getShip()->getMass() < this->getShip()->getMass())
+				{
+					//If ship1 is heavier than ship2
+					actor2->setShipCollided(true);
+				}
+				else if (this->getShip()->getMass() == actor2->getShip()->getMass())
+				{
+					//If the ships are the same weight
 					this->setShipCollided(true);
 					actor2->setShipCollided(true);
 				}
+
 			}
-			else if (this->isShip() && actor2->isShip() == false)
+		}
+		else if (this->isShip() && actor2->isShip() == false)
+		{
+			if (this->getShip()->getMass() <= actor2->getMass() || actor2->isKinematic())
 			{
+				//If the object is heavier or as heavy as the ship
 				this->setShipCollided(true);
 			}
-			else if (actor2->isShip() && this->isShip() == false)
+		}
+		else if (actor2->isShip() && this->isShip() == false)
+		{
+			if (actor2->getShip()->getMass() <= this->getMass() || actor2->isKinematic())
 			{
+				//If the object is heavier or as heavy as the ship
 				actor2->setShipCollided(true);
 			}
-			return;
 		}
+
 		float mass1 = 1.0f / (1.0f / getMass() + (r1 * r1) / getMoment());
 		float mass2 = 1.0f / (1.0f / actor2->getMass() + (r2 * r2) / actor2->getMoment());
 
@@ -109,8 +129,14 @@ void RigidBody::resolveCollision(RigidBody* actor2, vec2 contact, vec2* collisio
 			PhysicsScene::ApplyContactForces(this, actor2, normal, pen);
 		}
 
-		applyForce(-force, contact - m_position);
-		actor2->applyForce(force, contact - actor2->m_position);
+		if (!this->isShip())
+		{
+			applyForce(-force, contact - m_position);
+		}
+		if (!actor2->isShip())
+		{
+			actor2->applyForce(force, contact - actor2->m_position);
+		}
 
 		float kePost = getKineticEnergy() + actor2->getKineticEnergy();
 

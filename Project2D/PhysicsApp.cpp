@@ -61,9 +61,9 @@ bool PhysicsApp::startup()
 	//Sphere* ball4 = new Sphere(vec2(20, 0), vec2(0, 0), 0, 0, 1.7f, 2.8f, vec4(1, 0, 0, 1));
 	//m_physicsScene->addActor(ball4);
 	//ball4->setKinematic(true);
-	//
-	//Sphere* ball5 = new Sphere(vec2(40, -50), vec2(0, 0), 0, 0, 1.6f, 3, vec4(0, 1, 0, 1));
-	//m_physicsScene->addActor(ball5);
+	
+	Sphere* ball5 = new Sphere(vec2(40, -50), vec2(0, 0), 0, 0, 1.6f, 3, vec4(0, 1, 0, 1));
+	m_physicsScene->addActor(ball5);
 	//
 	//m_physicsScene->addActor(new Spring( ball4, ball5, 25, 2, 0.1f, vec4(1,0,0,1)));
 	//

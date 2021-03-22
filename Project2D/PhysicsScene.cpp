@@ -370,11 +370,6 @@ void PhysicsScene::shipCollision(RigidBody* obj1, RigidBody* obj2)
 			//If the object is heavier or as heavy as the ship
 			obj1->getShip()->shipBreak();
 		}
-		else
-		{
-			//If the object is lighter than the ship
-
-		}
 	}
 	else if (obj2->isShip() && obj1->isShip() == false)
 	{
@@ -382,11 +377,6 @@ void PhysicsScene::shipCollision(RigidBody* obj1, RigidBody* obj2)
 		{
 			//If the object is heavier or as heavy as the ship
 			obj2->getShip()->shipBreak();
-		}
-		else
-		{
-			//If the object is lighter than the ship
-
 		}
 	}
 }
