@@ -42,7 +42,7 @@ public class Ragdoll : MonoBehaviour
                 c.enabled = !value;
                 if(c.enabled)
                 {
-                    animator.SetTrigger("GetUp");
+                    //animator.SetTrigger("GetUp");
                 }
             }
         }

@@ -16,7 +16,7 @@ void SoftBody::Build(PhysicsScene* scene, vec2 position, float spacing, float sp
 		{
 			if (strings[j][i] == '0')
 			{
-				spheres[i * numColumns + j] = new Sphere(position + vec2(i, j) * spacing, glm::vec2(0, 0), 0, 0, 1.0f, 2, glm::vec4(1, 0, 0, 1));
+				spheres[i * numColumns + j] = new Sphere(position + vec2(i, j) * spacing, glm::vec2(0, 0), 0, 0, 1.0f, 1, glm::vec4(1, 0, 0, 1));
 				scene->addActor(spheres[i * numColumns + j]);
 			}
 			else

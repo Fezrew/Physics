@@ -62,8 +62,8 @@ bool PhysicsApp::startup()
 	//m_physicsScene->addActor(ball4);
 	//ball4->setKinematic(true);
 	
-	Sphere* ball5 = new Sphere(vec2(40, -50), vec2(0, 0), 0, 0, 1.6f, 3, vec4(0, 1, 0, 1));
-	m_physicsScene->addActor(ball5);
+	//Sphere* ball5 = new Sphere(vec2(40, -50), vec2(0, 0), 0, 0, 1.6f, 3, vec4(0, 1, 0, 1));
+	//m_physicsScene->addActor(ball5);
 	//
 	//m_physicsScene->addActor(new Spring( ball4, ball5, 25, 2, 0.1f, vec4(1,0,0,1)));
 	//
@@ -77,19 +77,19 @@ bool PhysicsApp::startup()
 	//m_physicsScene->addActor(wall);
 	//wall->setKinematic(true);
 	//
-	Box* wall2 = new Box(vec2(90, -50), vec2(0, 0), 0, 0, 400.0f, vec4(1, 1, 1, 1), 3, 3);
-	m_physicsScene->addActor(wall2);
-	wall2->setKinematic(true);
+	//Box* wall2 = new Box(vec2(90, -50), vec2(0, 0), 0, 0, 400.0f, vec4(1, 1, 1, 1), 3, 3);
+	//m_physicsScene->addActor(wall2);
+	//wall2->setKinematic(true);
 	//
-	//vector<std::string> sb;
-	//sb.push_back("000000");
-	//sb.push_back("000000");
-	//sb.push_back("00....");
-	//sb.push_back("00....");
-	//sb.push_back("00....");
-	//sb.push_back("000000");
-	//sb.push_back("000000");
-	//SoftBody::Build(m_physicsScene, vec2(50, -30), 5.0f, 10.0f, 0.1, sb, vec4(1, 0, 0, 1));
+	vector<std::string> sb;
+	sb.push_back("0.....");
+	sb.push_back("0.....");
+	sb.push_back("0.....");
+	sb.push_back("0.....");
+	sb.push_back("0.....");
+	sb.push_back("0.....");
+	sb.push_back("0.....");
+	SoftBody::Build(m_physicsScene, vec2(50, -30), 5.0f, 10.0f, 0.1, sb, vec4(1, 0, 0, 1));
 #pragma endregion
 
 	Ship* ship = new Ship(vec2(-40, 0), 50, 25, 1, 0, vec4(1, 0, 0, 1), aie::EInputCodes(65), aie::EInputCodes(68));
@@ -103,16 +103,16 @@ bool PhysicsApp::startup()
 	m_physicsScene->addActor(shipBox2);
 	ship->addToShip(shipBox2, vec2(2,2), 45);
 
-	Ship* ship2 = new Ship(vec2(40, 0), 50, 25, 1, 180, vec4(0, 0, 1, 1), aie::EInputCodes(263), aie::EInputCodes(262));
-	m_physicsScene->addActor(ship2);
-	
-	Box* shipBox3 = new Box(vec2(0, 0), vec2(0), 0, 0, 20.0f, vec4(1, 0, 1, 1), 4, 4);
-	m_physicsScene->addActor(shipBox3);
-	ship2->addToShip(shipBox3, vec2(0, 0), 0);
-	
-	Box* shipBox4 = new Box(vec2(0, 0), vec2(0), 0, 0, 20.0f, vec4(1, 0, 1, 1), 2.8, 2.8);
-	m_physicsScene->addActor(shipBox4);
-	ship2->addToShip(shipBox4, vec2(2, 2), 45);
+	//Ship* ship2 = new Ship(vec2(40, 0), 50, 25, 1, 180, vec4(0, 0, 1, 1), aie::EInputCodes(263), aie::EInputCodes(262));
+	//m_physicsScene->addActor(ship2);
+	//
+	//Box* shipBox3 = new Box(vec2(0, 0), vec2(0), 0, 0, 20.0f, vec4(1, 0, 1, 1), 4, 4);
+	//m_physicsScene->addActor(shipBox3);
+	//ship2->addToShip(shipBox3, vec2(0, 0), 0);
+	//
+	//Box* shipBox4 = new Box(vec2(0, 0), vec2(0), 0, 0, 20.0f, vec4(1, 0, 1, 1), 2.8, 2.8);
+	//m_physicsScene->addActor(shipBox4);
+	//ship2->addToShip(shipBox4, vec2(2, 2), 45);
 
 	return true;
 }
