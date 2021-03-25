@@ -29,6 +29,7 @@ public:
 	void setTimeStep(const float timeStep) { m_timeStep = timeStep; }
 	float getTimeStep() const { return m_timeStep; }
 
+#pragma region Collisions
 	void checkForCollision();
 	static void ApplyContactForces(RigidBody* body1, RigidBody* body2, vec2 norm, float pen);
 
@@ -43,6 +44,7 @@ public:
 	static bool box2Box(PhysicsObject*, PhysicsObject*);
 
 	static void shipCollision(RigidBody* obj1, RigidBody* obj2);
+#pragma endregion
 
 protected:
 	static vec2 m_gravity;

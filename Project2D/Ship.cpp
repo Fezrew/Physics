@@ -19,7 +19,6 @@ Ship::Ship(vec2 position, float acceleration, float speedCap, float turnSpeed, f
 
 	input = Input::getInstance();
 }
-
 Ship::~Ship()
 {
 }
@@ -57,11 +56,7 @@ void Ship::fixedUpdate(vec2 gravity, float timeStep)
 	}
 }
 
-void Ship::applyForce(vec2 force)
-{
-	m_velocity += force / getMass();
-}
-
+#pragma region Ship Building
 void Ship::addToShip(RigidBody* rb, vec2 localPos, float localOri)
 {
 	rb->setShip(this);
@@ -80,6 +75,13 @@ void Ship::addToShip(RigidBody* rb, vec2 localPos, float localOri)
 void Ship::removeFromShip(RigidBody* rb)
 {
 	rb->setShip(nullptr);
+}
+#pragma endregion
+
+#pragma region Ship Collisions
+void Ship::applyForce(vec2 force)
+{
+	m_velocity += force / getMass();
 }
 
 void Ship::shipContact(vec2 contact)
@@ -101,6 +103,7 @@ void Ship::shipBreak()
 	}
 	shipBroke = true;
 }
+#pragma endregion
 
 void Ship::draw()
 {

@@ -1,10 +1,13 @@
 #pragma once
-
 #include "Application.h"
 #include "Renderer2D.h"
 #include "PhysicsScene.h"
+#include "Input.h"
 
-class PhysicsApp : public aie::Application {
+using namespace aie;
+
+class PhysicsApp : public aie::Application 
+{
 public:
 
 	PhysicsApp();
@@ -15,6 +18,7 @@ public:
 
 	virtual void update(float deltaTime);
 	virtual void draw();
+	void createShip(vec2 position, float orientation, vec4 colour, EInputCodes inputLeft, EInputCodes inputRight);
 
 protected:
 

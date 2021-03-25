@@ -13,15 +13,16 @@ public:
 
 	virtual void fixedUpdate(vec2 gravity, float timeStep);
 	virtual void draw();
-	virtual void applyForce(vec2 force);
-	virtual void setPosition(vec2 position) { m_position = position; }
-	virtual vec2 getPosition() { return m_position; }
 
 	void addToShip(RigidBody* rb, vec2 localPos, float localOri);
 	void removeFromShip(RigidBody* rb);
+
+	virtual void applyForce(vec2 force);
 	virtual void shipContact(vec2 contact);
 	virtual void shipBreak();
 
+	virtual void setPosition(vec2 position) { m_position = position; }
+	virtual vec2 getPosition() { return m_position; }
 	vec2 getVelocity() { return m_velocity; }
 	float getSpeed() { return m_acceleration; }
 	virtual float getMass() { return m_mass; }

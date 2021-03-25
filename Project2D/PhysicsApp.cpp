@@ -3,7 +3,6 @@
 #include "glm/ext.hpp"
 #include "Texture.h"
 #include "Font.h"
-#include "Input.h"
 #include "Sphere.h"
 #include "Box.h"
 #include "Spring.h"
@@ -11,11 +10,12 @@
 #include "Ship.h"
 
 using namespace glm;
+using namespace aie;
 
+#pragma region Starting/Closing Application
 PhysicsApp::PhysicsApp()
 {
 }
-
 PhysicsApp::~PhysicsApp()
 {
 
@@ -61,7 +61,7 @@ bool PhysicsApp::startup()
 	//Sphere* ball4 = new Sphere(vec2(20, 0), vec2(0, 0), 0, 0, 1.7f, 2.8f, vec4(1, 0, 0, 1));
 	//m_physicsScene->addActor(ball4);
 	//ball4->setKinematic(true);
-	
+
 	//Sphere* ball5 = new Sphere(vec2(40, -50), vec2(0, 0), 0, 0, 1.6f, 3, vec4(0, 1, 0, 1));
 	//m_physicsScene->addActor(ball5);
 	//
@@ -81,38 +81,19 @@ bool PhysicsApp::startup()
 	//m_physicsScene->addActor(wall2);
 	//wall2->setKinematic(true);
 	//
-	vector<std::string> sb;
-	sb.push_back("0.....");
-	sb.push_back("0.....");
-	sb.push_back("0.....");
-	sb.push_back("0.....");
-	sb.push_back("0.....");
-	sb.push_back("0.....");
-	sb.push_back("0.....");
-	SoftBody::Build(m_physicsScene, vec2(50, -30), 5.0f, 10.0f, 0.1, sb, vec4(1, 0, 0, 1));
+	//vector<std::string> sb;
+	//sb.push_back("0.....");
+	//sb.push_back("0.....");
+	//sb.push_back("0.....");
+	//sb.push_back("0.....");
+	//sb.push_back("0.....");
+	//sb.push_back("0.....");
+	//sb.push_back("0.....");
+	//SoftBody::Build(m_physicsScene, vec2(50, -30), 5.0f, 10.0f, 0.1, sb, vec4(1, 0, 0, 1));
 #pragma endregion
 
-	Ship* ship = new Ship(vec2(-40, 0), 50, 25, 1, 0, vec4(1, 0, 0, 1), aie::EInputCodes(65), aie::EInputCodes(68));
-	m_physicsScene->addActor(ship);
-
-	Box* shipBox = new Box(vec2(0,0), vec2(0), 0, 0, 20.0f, vec4(1, 0, 1, 1), 4, 4);
-	m_physicsScene->addActor(shipBox);
-	ship->addToShip(shipBox, vec2(0,0), 0);
-
-	Box* shipBox2 = new Box(vec2(0,0), vec2(0), 0, 0, 20.0f, vec4(1, 0, 1, 1), 2.8, 2.8);
-	m_physicsScene->addActor(shipBox2);
-	ship->addToShip(shipBox2, vec2(2,2), 45);
-
-	//Ship* ship2 = new Ship(vec2(40, 0), 50, 25, 1, 180, vec4(0, 0, 1, 1), aie::EInputCodes(263), aie::EInputCodes(262));
-	//m_physicsScene->addActor(ship2);
-	//
-	//Box* shipBox3 = new Box(vec2(0, 0), vec2(0), 0, 0, 20.0f, vec4(1, 0, 1, 1), 4, 4);
-	//m_physicsScene->addActor(shipBox3);
-	//ship2->addToShip(shipBox3, vec2(0, 0), 0);
-	//
-	//Box* shipBox4 = new Box(vec2(0, 0), vec2(0), 0, 0, 20.0f, vec4(1, 0, 1, 1), 2.8, 2.8);
-	//m_physicsScene->addActor(shipBox4);
-	//ship2->addToShip(shipBox4, vec2(2, 2), 45);
+	createShip(vec2(-40, 0), 0, vec4(1, 0, 0, 1), EInputCodes(INPUT_KEY_A), EInputCodes(INPUT_KEY_D));
+	createShip(vec2(40, 0), 180, vec4(0, 1, 0, 1), EInputCodes(INPUT_KEY_LEFT), EInputCodes(INPUT_KEY_RIGHT));
 
 	return true;
 }
@@ -122,6 +103,7 @@ void PhysicsApp::shutdown()
 	delete m_font;
 	delete m_2dRenderer;
 }
+#pragma endregion
 
 void PhysicsApp::update(float deltaTime)
 {
@@ -165,4 +147,18 @@ void PhysicsApp::draw()
 
 	// done drawing sprites
 	m_2dRenderer->end();
+}
+
+void PhysicsApp::createShip(vec2 position, float orientation, vec4 colour, EInputCodes inputLeft, EInputCodes inputRight)
+{
+	Ship* ship = new Ship(position, 50, 25, 1, orientation, colour, inputLeft, inputRight);
+	m_physicsScene->addActor(ship);
+
+	Box* shipBox = new Box(vec2(0, 0), vec2(0), 0, 0, 20.0f, colour, 4, 4);
+	m_physicsScene->addActor(shipBox);
+	ship->addToShip(shipBox, vec2(0, 0), 0);
+
+	Box* shipBox2 = new Box(vec2(0, 0), vec2(0), 0, 0, 20.0f, colour, 2.8, 2.8);
+	m_physicsScene->addActor(shipBox2);
+	ship->addToShip(shipBox2, vec2(2, 2), 45);
 }
