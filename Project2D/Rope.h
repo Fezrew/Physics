@@ -23,8 +23,8 @@ protected:
 	vec4 m_colour;
 
 	double m_spacing = 0.1f;
-	float m_springForce = 100.0f;
-	float m_damping = 98.0f;
+	float m_springForce = 10.0f;
+	float m_damping = 9.8f;
 	int m_length = 0;
 	float m_linkSize = 0.5f;
 };
