@@ -1,13 +1,30 @@
 #pragma once
 #include "PhysicsScene.h"
-#include "Sphere.h"
-#include <vector>
+
+class RigidBody;
+class Sphere;
 
 class Rope
 {
 public:
-	void Build(PhysicsScene* scene, vec2 position, float spacing, float springForce, float damping, int length, vec4 colour);
+
+	Rope(PhysicsScene* scene, int length);
+	void Build(RigidBody* obj1, RigidBody* obj2);
+
+	float getSpacing() { return m_spacing; }
+	float getLength() { return m_length; }
 
 protected:
-	vector<Sphere*> spheres;
+
+	PhysicsScene* m_scene;
+	Sphere** m_spheres = nullptr;
+	Sphere* ropeStart = nullptr;
+	Sphere* ropeEnd = nullptr;
+	vec4 m_colour;
+
+	double m_spacing = 0.1f;
+	float m_springForce = 100.0f;
+	float m_damping = 98.0f;
+	int m_length = 0;
+	float m_linkSize = 0.5f;
 };

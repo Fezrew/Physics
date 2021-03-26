@@ -199,6 +199,10 @@ bool PhysicsScene::sphere2Plane(PhysicsObject* obj1, PhysicsObject* obj2)
 
 	if (sphere != nullptr && plane != nullptr)
 	{
+		if (sphere->isRope())
+		{
+			return false;
+		}
 		vec2 collisionNormal = plane->getNormal();
 
 		float sphereToPlane = dot(sphere->getPosition(), plane->getNormal()) - plane->getDistance();
@@ -222,6 +226,15 @@ bool PhysicsScene::sphere2Sphere(PhysicsObject* obj1, PhysicsObject* obj2)
 
 	if (sphere1 != nullptr && sphere2 != nullptr)
 	{
+		if (sphere1->isRope())
+		{
+			return false;
+		}
+		else if (sphere2->isRope())
+		{
+			return false;
+		}
+
 		float dist = distance(sphere1->getPosition(), sphere2->getPosition());
 		if (dist <= sphere1->getRadius() + sphere2->getRadius())
 		{
@@ -258,6 +271,11 @@ bool PhysicsScene::box2Sphere(PhysicsObject* obj1, PhysicsObject* obj2)
 
 	if (box != nullptr && sphere != nullptr)
 	{
+		if (sphere->isRope())
+		{
+			return false;
+		}
+
 		vec2 circlePosWorld = sphere->getPosition() - box->getPosition();
 		vec2 circlePosBox = vec2(dot(circlePosWorld, box->getLocalX()), dot(circlePosWorld, box->getLocalY()));
 
@@ -310,29 +328,29 @@ bool PhysicsScene::box2Box(PhysicsObject* obj1, PhysicsObject* obj2)
 
 	if (box1 != nullptr && box2 != nullptr)
 	{
-			glm::vec2 boxPos = box2->getPosition() - box1->getPosition();
-			glm::vec2 norm(0, 0);
-			glm::vec2 contact(0, 0);
-			float pen = 0;
-			int numContacts = 0;
+		glm::vec2 boxPos = box2->getPosition() - box1->getPosition();
+		glm::vec2 norm(0, 0);
+		glm::vec2 contact(0, 0);
+		float pen = 0;
+		int numContacts = 0;
 
-			box1->checkBoxCorners(*box2, contact, numContacts, pen, norm);
+		box1->checkBoxCorners(*box2, contact, numContacts, pen, norm);
 
-			if (box2->checkBoxCorners(*box1, contact, numContacts, pen, norm)) {
-				norm = -norm;
-			}
+		if (box2->checkBoxCorners(*box1, contact, numContacts, pen, norm)) {
+			norm = -norm;
+		}
 
-			if (pen > 0)
+		if (pen > 0)
+		{
+			box1->resolveCollision(box2, contact / float(numContacts), &norm, pen);
+
+			//If either part is a ship, ship collide
+			if (box1->hasShipCollided() || box2->hasShipCollided())
 			{
-				box1->resolveCollision(box2, contact / float(numContacts), &norm, pen);
-
-				//If either part is a ship, ship collide
-				if (box1->hasShipCollided() || box2->hasShipCollided())
-				{
-					shipCollision(box1, box2);
-				}
+				shipCollision(box1, box2);
 			}
-			return true;
+		}
+		return true;
 	}
 	return false;
 

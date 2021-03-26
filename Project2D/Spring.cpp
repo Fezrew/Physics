@@ -17,20 +17,23 @@ void Spring::fixedUpdate(vec2 gravity, float timeStep)
 
 	vec2 relativeVelocity = m_body2->getVelocity() - m_body1->getVelocity();
 
-	vec2 force = dist * m_springForce * (m_spacing - length) - m_damping * relativeVelocity;
-
-	// cap the spring force to 1000 N to prevent numerical instability
-	const float threshold = 1000.0f;
-	float forceMag = glm::length(force);
-
-	if (forceMag > threshold)
+	if (length > m_spacing)
 	{
-		force *= threshold / forceMag;
+		vec2 force = dist * m_springForce * (m_spacing - length) - m_damping * relativeVelocity;
+
+		// cap the spring force to 1000 N to prevent numerical instability
+		const float threshold = 1000.0f;
+		float forceMag = glm::length(force);
+
+		if (forceMag > threshold)
+		{
+			force *= threshold / forceMag;
+		}
+
+
+		m_body1->applyForce(-force * timeStep, p1 - p1);
+		m_body2->applyForce(force * timeStep, p2 - p1);
 	}
-
-
-	m_body1->applyForce(-force * timeStep, p1 - p1);
-	m_body2->applyForce(force * timeStep, p2 - p1);
 }
 
 void Spring::draw()

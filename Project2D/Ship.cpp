@@ -75,6 +75,8 @@ void Ship::addToShip(RigidBody* rb, vec2 localPos, float localOri)
 void Ship::removeFromShip(RigidBody* rb)
 {
 	rb->setShip(nullptr);
+	shipParts.pop_back();
+	m_mass -= rb->getMass();
 }
 #pragma endregion
 
@@ -99,7 +101,6 @@ void Ship::shipBreak()
 	for (int i = shipParts.size(); i != 0; i--)
 	{
 		removeFromShip(shipParts[i - 1]);
-		shipParts.pop_back();
 	}
 	shipBroke = true;
 }

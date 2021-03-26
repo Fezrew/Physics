@@ -8,6 +8,7 @@
 #include "Spring.h"
 #include "SoftBody.h"
 #include "Ship.h"
+#include "Rope.h"
 
 using namespace glm;
 using namespace aie;
@@ -93,7 +94,7 @@ bool PhysicsApp::startup()
 #pragma endregion
 
 	createShip(vec2(-40, 0), 0, vec4(1, 0, 0, 1), EInputCodes(INPUT_KEY_A), EInputCodes(INPUT_KEY_D));
-	createShip(vec2(40, 0), 180, vec4(0, 1, 0, 1), EInputCodes(INPUT_KEY_LEFT), EInputCodes(INPUT_KEY_RIGHT));
+	//createShip(vec2(40, 0), 180, vec4(0, 1, 0, 1), EInputCodes(INPUT_KEY_LEFT), EInputCodes(INPUT_KEY_RIGHT));
 
 	return true;
 }
@@ -158,7 +159,16 @@ void PhysicsApp::createShip(vec2 position, float orientation, vec4 colour, EInpu
 	m_physicsScene->addActor(shipBox);
 	ship->addToShip(shipBox, vec2(0, 0), 0);
 
-	Box* shipBox2 = new Box(vec2(0, 0), vec2(0), 0, 0, 20.0f, colour, 2.8, 2.8);
+	Box* shipBox2 = new Box(vec2(0, 0), vec2(0), 0, 0, 20.0f, colour, 2.8f, 2.8f);
 	m_physicsScene->addActor(shipBox2);
 	ship->addToShip(shipBox2, vec2(2, 2), 45);
+	
+
+	Sphere* wreckingBall = new Sphere(vec2(0, 0), vec2(0, 0), 0, 0, 40.0f, 6, colour);
+	m_physicsScene->addActor(wreckingBall);
+	ship->addToShip(wreckingBall, vec2(-20, -20), 0);
+	ship->removeFromShip(wreckingBall);
+
+	Rope* rope = new Rope(m_physicsScene, 15);
+	rope->Build(shipBox, wreckingBall);
 }

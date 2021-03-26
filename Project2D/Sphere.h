@@ -1,5 +1,6 @@
 #pragma once
 #include "RigidBody.h"
+#include "Rope.h"
 
 class Sphere : public RigidBody
 {
@@ -10,8 +11,11 @@ public:
 	virtual void draw();
 
 	float getRadius() { return m_radius; }
+	bool isRope() { return ropeStatus; }
+	void setRope(bool status) { ropeStatus = status; }
 
 protected:
 	float m_radius;
+	bool ropeStatus = false;
 };
 

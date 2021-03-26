@@ -57,7 +57,7 @@ void Plane::resolveCollision(RigidBody* actor2, vec2 contact)
 		mass0 = 1.0f / (1.0f / actor2->getMass() + (r * r) / actor2->getMoment());
 	}
 
-	float elasticity = 0.925;
+	float elasticity = 0.7;
 
 	float j = -(1 + elasticity) * velocityIntoPlane * mass0;
 

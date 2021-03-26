@@ -118,7 +118,7 @@ void RigidBody::resolveCollision(RigidBody* actor2, vec2 contact, vec2* collisio
 		float mass1 = 1.0f / (1.0f / getMass() + (r1 * r1) / getMoment());
 		float mass2 = 1.0f / (1.0f / actor2->getMass() + (r2 * r2) / actor2->getMoment());
 
-		float elasticity = 0.925f;
+		float elasticity = 0.7f;
 
 		vec2 force = (1.0f + elasticity) * mass1 * mass2 / (mass1 + mass2) * (v1 - v2) * normal;
 
