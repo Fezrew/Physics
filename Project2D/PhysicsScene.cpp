@@ -48,7 +48,7 @@ void PhysicsScene::update(float dt)
 			checkForCollision();
 		}
 
-		cout << "Total energy: " << getTotalEnergy() << endl;
+		//cout << "Total energy: " << getTotalEnergy() << endl;
 	}
 }
 void PhysicsScene::draw()

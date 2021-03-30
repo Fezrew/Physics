@@ -19,17 +19,17 @@ void Rope::Build(RigidBody* obj1, RigidBody* obj2)
 		Sphere* sphere;
 		if (i == 0)
 		{
-			sphere = new Sphere(vec2(obj1->getPosition().x, obj1->getPosition().y - m_spacing), vec2(), 0, 0, 0.5f, m_linkSize, m_colour);
+			sphere = new Sphere(vec2(obj1->getPosition().x, obj1->getPosition().y - m_spacing), vec2(), 0, 0, 0.5f, m_linkRadius, m_colour);
 			ropeStart = sphere;
 		}
 		else if (i == m_length - 1)
 		{
-			sphere = new Sphere(vec2(m_spheres[i - 1]->getPosition().x, m_spheres[i - 1]->getPosition().y - m_spacing), vec2(), 0, 0, 0.5f, m_linkSize, m_colour);
+			sphere = new Sphere(vec2(m_spheres[i - 1]->getPosition().x, m_spheres[i - 1]->getPosition().y - m_spacing), vec2(), 0, 0, 0.5f, m_linkRadius, m_colour);
 			ropeEnd = sphere;
 		}
 		else
 		{
-			sphere = new Sphere(vec2(m_spheres[i - 1]->getPosition().x, m_spheres[i - 1]->getPosition().y - m_spacing), vec2(), 0, 0, 0.5f, m_linkSize, m_colour);
+			sphere = new Sphere(vec2(m_spheres[i - 1]->getPosition().x, m_spheres[i - 1]->getPosition().y - m_spacing), vec2(), 0, 0, 0.5f, m_linkRadius, m_colour);
 		}
 		sphere->setRope(true);
 		m_spheres[i] = sphere;

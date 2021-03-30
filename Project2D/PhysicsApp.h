@@ -18,7 +18,10 @@ public:
 
 	virtual void update(float deltaTime);
 	virtual void draw();
-	void createShip(vec2 position, float orientation, vec4 colour, EInputCodes inputLeft, EInputCodes inputRight);
+	void createShip(vec2 position, float orientation, vec4 colour, EInputCodes inputLeft, EInputCodes inputRight, EInputCodes boostInput);
+
+	void shipScene();
+	void sandboxScene();
 
 protected:
 

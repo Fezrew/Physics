@@ -24,7 +24,6 @@ PhysicsApp::~PhysicsApp()
 
 bool PhysicsApp::startup()
 {
-#pragma region Creating the scene
 	// increase the 2d line count to maximize the number of objects we can draw
 	aie::Gizmos::create(255U, 255U, 65535U, 65535U);
 
@@ -35,6 +34,16 @@ bool PhysicsApp::startup()
 	m_physicsScene->setGravity(vec2(0, 0));
 	m_physicsScene->setTimeStep(0.01f);
 	m_timer = 0;
+
+	//sandboxScene();
+	shipScene();
+
+	return true;
+}
+
+void PhysicsApp::shipScene()
+{
+	m_physicsScene->clear();
 
 	Plane* plane = new Plane(vec2(0, 1), -55, vec4(0, 0, 1, 1));
 	m_physicsScene->addActor(plane);
@@ -47,56 +56,68 @@ bool PhysicsApp::startup()
 
 	Plane* plane4 = new Plane(vec2(-1, 0), -98, vec4(0, 0, 1, 1));
 	m_physicsScene->addActor(plane4);
-#pragma endregion
 
-#pragma region Physics Test Items
-	//Sphere* ball = new Sphere(vec2(-20, 0), vec2(11.11f, 0), 0, 0, 1.7f, 2.8f, vec4(1, 0, 0, 1));
-	//m_physicsScene->addActor(ball);
-	//
-	//Sphere* ball2 = new Sphere(vec2(-40, 50), vec2(0, 800), 0, 0, 1.6f, 3, vec4(0, 1, 0, 1));
-	//m_physicsScene->addActor(ball2);
-	//
-	//Sphere* ball3 = new Sphere(vec2(-50, 30), vec2(-500, -75), 0, 0, 2000.0f, 15, vec4(0, 1, 1, 1));
-	//m_physicsScene->addActor(ball3);
-	//
-	//Sphere* ball4 = new Sphere(vec2(20, 0), vec2(0, 0), 0, 0, 1.7f, 2.8f, vec4(1, 0, 0, 1));
-	//m_physicsScene->addActor(ball4);
-	//ball4->setKinematic(true);
+	createShip(vec2(-40, 0), 0, vec4(1, 0, 0, 1), EInputCodes(INPUT_KEY_A), EInputCodes(INPUT_KEY_D), EInputCodes(INPUT_KEY_W));
+	createShip(vec2(40, 0), 180, vec4(0, 1, 0, 1), EInputCodes(INPUT_KEY_LEFT), EInputCodes(INPUT_KEY_RIGHT), EInputCodes(INPUT_KEY_UP));
+}
 
-	//Sphere* ball5 = new Sphere(vec2(40, -50), vec2(0, 0), 0, 0, 1.6f, 3, vec4(0, 1, 0, 1));
-	//m_physicsScene->addActor(ball5);
-	//
-	//m_physicsScene->addActor(new Spring( ball4, ball5, 25, 2, 0.1f, vec4(1,0,0,1)));
-	//
-	//Box* box = new Box(vec2(0, -20), vec2(0), 0, 10, 20.0f, vec4(1, 0, 1, 1), 5, 3);
-	//m_physicsScene->addActor(box);
-	//
-	//Box* box2 = new Box(vec2(0, -40), vec2(0, 100), 200, 0, 400.0f, vec4(1, 1, 0, 1), 35, 5);
-	//m_physicsScene->addActor(box2);
-	//
-	//Box* wall = new Box(vec2(30, -10), vec2(0, 0), 0, 0, 400.0f, vec4(1, 1, 1, 1), 40, 5);
-	//m_physicsScene->addActor(wall);
-	//wall->setKinematic(true);
-	//
-	//Box* wall2 = new Box(vec2(90, -50), vec2(0, 0), 0, 0, 400.0f, vec4(1, 1, 1, 1), 3, 3);
-	//m_physicsScene->addActor(wall2);
-	//wall2->setKinematic(true);
-	//
-	//vector<std::string> sb;
-	//sb.push_back("0.....");
-	//sb.push_back("0.....");
-	//sb.push_back("0.....");
-	//sb.push_back("0.....");
-	//sb.push_back("0.....");
-	//sb.push_back("0.....");
-	//sb.push_back("0.....");
-	//SoftBody::Build(m_physicsScene, vec2(50, -30), 5.0f, 10.0f, 0.1, sb, vec4(1, 0, 0, 1));
-#pragma endregion
+void PhysicsApp::sandboxScene()
+{
+	m_physicsScene->clear();
 
-	createShip(vec2(-40, 0), 0, vec4(1, 0, 0, 1), EInputCodes(INPUT_KEY_A), EInputCodes(INPUT_KEY_D));
-	//createShip(vec2(40, 0), 180, vec4(0, 1, 0, 1), EInputCodes(INPUT_KEY_LEFT), EInputCodes(INPUT_KEY_RIGHT));
+	Plane* plane = new Plane(vec2(0, 1), -55, vec4(0, 0, 1, 1));
+	m_physicsScene->addActor(plane);
 
-	return true;
+	Plane* plane2 = new Plane(vec2(0, -1), -55, vec4(0, 0, 1, 1));
+	m_physicsScene->addActor(plane2);
+
+	Plane* plane3 = new Plane(vec2(1, 0), -98, vec4(0, 0, 1, 1));
+	m_physicsScene->addActor(plane3);
+
+	Plane* plane4 = new Plane(vec2(-1, 0), -98, vec4(0, 0, 1, 1));
+	m_physicsScene->addActor(plane4);
+
+	Sphere* ball = new Sphere(vec2(-20, 0), vec2(11.11f, 0), 0, 0, 1.7f, 2.8f, vec4(1, 0, 0, 1));
+	m_physicsScene->addActor(ball);
+
+	Sphere* ball2 = new Sphere(vec2(-40, 50), vec2(0, 800), 0, 0, 1.6f, 3, vec4(0, 1, 0, 1));
+	m_physicsScene->addActor(ball2);
+
+	Sphere* ball3 = new Sphere(vec2(-50, 30), vec2(-500, -75), 0, 0, 2000.0f, 15, vec4(0, 1, 1, 1));
+	m_physicsScene->addActor(ball3);
+
+	Sphere* ball4 = new Sphere(vec2(20, 0), vec2(0, 0), 0, 0, 1.7f, 2.8f, vec4(1, 0, 0, 1));
+	m_physicsScene->addActor(ball4);
+	ball4->setKinematic(true);
+
+	Sphere* ball5 = new Sphere(vec2(40, -50), vec2(0, 0), 0, 0, 1.6f, 3, vec4(0, 1, 0, 1));
+	m_physicsScene->addActor(ball5);
+
+	m_physicsScene->addActor(new Spring(ball4, ball5, 25, 2, 0.1f, vec4(1, 0, 0, 1)));
+
+	Box* box = new Box(vec2(0, -20), vec2(0), 0, 10, 20.0f, vec4(1, 0, 1, 1), 5, 3);
+	m_physicsScene->addActor(box);
+
+	Box* box2 = new Box(vec2(0, -40), vec2(0, 100), 200, 0, 400.0f, vec4(1, 1, 0, 1), 35, 5);
+	m_physicsScene->addActor(box2);
+
+	Box* wall = new Box(vec2(30, -10), vec2(0, 0), 0, 0, 400.0f, vec4(1, 1, 1, 1), 40, 5);
+	m_physicsScene->addActor(wall);
+	wall->setKinematic(true);
+
+	Box* wall2 = new Box(vec2(90, -50), vec2(0, 0), 0, 0, 400.0f, vec4(1, 1, 1, 1), 3, 3);
+	m_physicsScene->addActor(wall2);
+	wall2->setKinematic(true);
+
+	vector<std::string> sb;
+	sb.push_back("0.....");
+	sb.push_back("0.....");
+	sb.push_back("0.....");
+	sb.push_back("0.....");
+	sb.push_back("0.....");
+	sb.push_back("0.....");
+	sb.push_back("0.....");
+	SoftBody::Build(m_physicsScene, vec2(50, -30), 5.0f, 10.0f, 0.1, sb, vec4(1, 0, 0, 1));
 }
 
 void PhysicsApp::shutdown()
@@ -150,9 +171,9 @@ void PhysicsApp::draw()
 	m_2dRenderer->end();
 }
 
-void PhysicsApp::createShip(vec2 position, float orientation, vec4 colour, EInputCodes inputLeft, EInputCodes inputRight)
+void PhysicsApp::createShip(vec2 position, float orientation, vec4 colour, EInputCodes inputLeft, EInputCodes inputRight, EInputCodes boostInput)
 {
-	Ship* ship = new Ship(position, 50, 25, 1, orientation, colour, inputLeft, inputRight);
+	Ship* ship = new Ship(position, 50, 25, 1.5f, orientation, colour, inputLeft, inputRight, boostInput);
 	m_physicsScene->addActor(ship);
 
 	Box* shipBox = new Box(vec2(0, 0), vec2(0), 0, 0, 20.0f, colour, 4, 4);
@@ -162,13 +183,15 @@ void PhysicsApp::createShip(vec2 position, float orientation, vec4 colour, EInpu
 	Box* shipBox2 = new Box(vec2(0, 0), vec2(0), 0, 0, 20.0f, colour, 2.8f, 2.8f);
 	m_physicsScene->addActor(shipBox2);
 	ship->addToShip(shipBox2, vec2(2, 2), 45);
-	
 
-	Sphere* wreckingBall = new Sphere(vec2(0, 0), vec2(0, 0), 0, 0, 40.0f, 6, colour);
+
+	Sphere* wreckingBall = new Sphere(vec2(0, 0), vec2(0, 0), 0, 0, 40.0f, 5, colour);
 	m_physicsScene->addActor(wreckingBall);
 	ship->addToShip(wreckingBall, vec2(-20, -20), 0);
 	ship->removeFromShip(wreckingBall);
 
-	Rope* rope = new Rope(m_physicsScene, 15);
+	Rope* rope = new Rope(m_physicsScene, 12);
 	rope->Build(shipBox, wreckingBall);
 }
+
+

@@ -8,7 +8,7 @@
 class Ship : public PhysicsObject
 {
 public:
-	Ship(vec2 position, float acceleration, float speedCap, float turnSpeed, float orientation, vec4 colour, aie::EInputCodes inputLeft, aie::EInputCodes inputRight);
+	Ship(vec2 position, float acceleration, float speedCap, float turnSpeed, float orientation, vec4 colour, aie::EInputCodes inputLeft, aie::EInputCodes inputRight, aie::EInputCodes boostInput);
 	~Ship();
 
 	virtual void fixedUpdate(vec2 gravity, float timeStep);
@@ -35,6 +35,7 @@ protected:
 	vec2 m_velocity;
 	float m_acceleration;
 	float m_speedCap;
+	float m_boostSpeed;
 	float m_mass;
 	float m_orientation;
 	vec2 shipOrientation;
@@ -42,6 +43,7 @@ protected:
 	vec4 m_colour;
 	aie::EInputCodes m_left;
 	aie::EInputCodes m_right;
+	aie::EInputCodes m_boost;
 
 	Input* input;
 	Sphere* ball;

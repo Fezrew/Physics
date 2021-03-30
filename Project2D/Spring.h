@@ -13,6 +13,9 @@ public:
 	float getRestLength() { return m_spacing; }
 	float getSpringCoefficient() { return m_springForce; }
 
+	bool getLinkStatus() { return m_isLink; }
+	void setLinkStatus(bool state) { m_isLink = state; }
+
 	virtual void fixedUpdate(vec2 gravity, float timeStep);
 	virtual void applyForce(vec2 force) {}
 	virtual float getMass() { return 0.0f; }
@@ -22,10 +25,10 @@ public:
 	virtual void shipBreak() {}
 	virtual void draw();
 
-
 protected:
 	float m_damping = 0.1f; //leave this alone
 	float m_spacing; //length of spring
 	float m_springForce; //restoring force
+	bool m_isLink = false;
 };
 

@@ -1,6 +1,6 @@
 #include "Ship.h"
 
-Ship::Ship(vec2 position, float acceleration, float speedCap, float turnSpeed, float orientation, vec4 colour, aie::EInputCodes inputLeft, aie::EInputCodes inputRight)
+Ship::Ship(vec2 position, float acceleration, float speedCap, float turnSpeed, float orientation, vec4 colour, aie::EInputCodes inputLeft, aie::EInputCodes inputRight, aie::EInputCodes boostInput)
 	: PhysicsObject(SHIP, colour)
 {
 	m_position = position;
@@ -13,6 +13,8 @@ Ship::Ship(vec2 position, float acceleration, float speedCap, float turnSpeed, f
 	m_mass = 0;
 	m_left = inputLeft;
 	m_right = inputRight;
+	m_boost = boostInput;
+	m_boostSpeed = speedCap * 0.2;
 
 	ball = new Sphere(m_position, vec2(0, 0), 0, m_orientation, 0.5f, 1.5f, vec4(1, 1, 1, 1));
 	ball->setShip(this);
@@ -30,9 +32,13 @@ void Ship::fixedUpdate(vec2 gravity, float timeStep)
 
 	applyForce(movement);
 
-	if (length(m_velocity) > m_speedCap)
+	if (length(m_velocity) > m_speedCap && !input->isKeyDown(m_boost))
 	{
 		m_velocity = normalize(m_velocity) * m_speedCap;
+	}
+	else if (length(m_velocity) > m_speedCap&& input->isKeyDown(m_boost))
+	{
+		m_velocity = normalize(m_velocity) * (m_speedCap + m_boostSpeed);
 	}
 
 	m_position += m_velocity * timeStep;

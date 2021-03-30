@@ -22,9 +22,9 @@ protected:
 	Sphere* ropeEnd = nullptr;
 	vec4 m_colour;
 
-	double m_spacing = 0.1f;
-	float m_springForce = 10.0f;
-	float m_damping = 9.8f;
+	double m_spacing = 0.75f;
+	float m_springForce = 30.0f;
+	float m_damping = 10.0f;
 	int m_length = 0;
-	float m_linkSize = 0.5f;
+	float m_linkRadius = 0.005f;
 };

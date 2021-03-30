@@ -29,6 +29,8 @@ public:
 	void setTimeStep(const float timeStep) { m_timeStep = timeStep; }
 	float getTimeStep() const { return m_timeStep; }
 
+	void clear() { m_actors.clear(); }
+
 #pragma region Collisions
 	void checkForCollision();
 	static void ApplyContactForces(RigidBody* body1, RigidBody* body2, vec2 norm, float pen);
