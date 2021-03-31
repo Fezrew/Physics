@@ -55,20 +55,20 @@ void SoftBody::Build(PhysicsScene* scene, vec2 position, float spacing, float sp
 
 			//diagonals
 			if (s11 && s00)
-				scene->addActor(new Spring(s11, s00, spacing, springForce, damping, colour));
+				scene->addActor(new Spring(s11, s00, spacing * 1.5f, springForce, damping, colour));
 			if (s10 && s01)
-				scene->addActor(new Spring(s10, s01, spacing, springForce, damping, colour));
+				scene->addActor(new Spring(s10, s01, spacing * 1.5f, springForce, damping, colour));
 
 
-
+			//bend springs
 			if (s00 && s02)
-				scene->addActor(new Spring(s00, s02, spacing, springForce, damping, colour));
+				scene->addActor(new Spring(s00, s02, spacing * 2, springForce, damping, colour));
 			if (s00 && s20)
-				scene->addActor(new Spring(s00, s20, spacing, springForce, damping, colour));
+				scene->addActor(new Spring(s00, s20, spacing * 2, springForce, damping, colour));
 			if (s20 && s22)
-				scene->addActor(new Spring(s20, s22, spacing, springForce, damping, colour));
+				scene->addActor(new Spring(s20, s22, spacing * 2, springForce, damping, colour));
 			if (s02 && s22)
-				scene->addActor(new Spring(s02, s22, spacing, springForce, damping, colour));
+				scene->addActor(new Spring(s02, s22, spacing * 2, springForce, damping, colour));
 		}
 	}
 }

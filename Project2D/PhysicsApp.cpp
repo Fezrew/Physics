@@ -79,45 +79,45 @@ void PhysicsApp::sandboxScene()
 
 	Sphere* ball = new Sphere(vec2(-20, 0), vec2(11.11f, 0), 0, 0, 1.7f, 2.8f, vec4(1, 0, 0, 1));
 	m_physicsScene->addActor(ball);
-
-	Sphere* ball2 = new Sphere(vec2(-40, 50), vec2(0, 800), 0, 0, 1.6f, 3, vec4(0, 1, 0, 1));
+	
+	Sphere* ball2 = new Sphere(vec2(-40, 50), vec2(0, 80), 0, 0, 1.6f, 3, vec4(0, 1, 0, 1));
 	m_physicsScene->addActor(ball2);
-
-	Sphere* ball3 = new Sphere(vec2(-50, 30), vec2(-500, -75), 0, 0, 2000.0f, 15, vec4(0, 1, 1, 1));
+	
+	Sphere* ball3 = new Sphere(vec2(-50, 30), vec2(-50, -75), 0, 0, 2000.0f, 15, vec4(0, 1, 1, 1));
 	m_physicsScene->addActor(ball3);
-
+	
 	Sphere* ball4 = new Sphere(vec2(20, 0), vec2(0, 0), 0, 0, 1.7f, 2.8f, vec4(1, 0, 0, 1));
 	m_physicsScene->addActor(ball4);
 	ball4->setKinematic(true);
-
+	
 	Sphere* ball5 = new Sphere(vec2(40, -50), vec2(0, 0), 0, 0, 1.6f, 3, vec4(0, 1, 0, 1));
 	m_physicsScene->addActor(ball5);
-
+	
 	m_physicsScene->addActor(new Spring(ball4, ball5, 25, 2, 0.1f, vec4(1, 0, 0, 1)));
-
+	
 	Box* box = new Box(vec2(0, -20), vec2(0), 0, 10, 20.0f, vec4(1, 0, 1, 1), 5, 3);
 	m_physicsScene->addActor(box);
-
-	Box* box2 = new Box(vec2(0, -40), vec2(0, 100), 200, 0, 400.0f, vec4(1, 1, 0, 1), 35, 5);
+	
+	Box* box2 = new Box(vec2(0, -40), vec2(0, 100), 20, 0, 400.0f, vec4(1, 1, 0, 1), 35, 5);
 	m_physicsScene->addActor(box2);
-
+	
 	Box* wall = new Box(vec2(30, -10), vec2(0, 0), 0, 0, 400.0f, vec4(1, 1, 1, 1), 40, 5);
 	m_physicsScene->addActor(wall);
 	wall->setKinematic(true);
-
+	
 	Box* wall2 = new Box(vec2(90, -50), vec2(0, 0), 0, 0, 400.0f, vec4(1, 1, 1, 1), 3, 3);
 	m_physicsScene->addActor(wall2);
 	wall2->setKinematic(true);
 
 	vector<std::string> sb;
-	sb.push_back("0.....");
-	sb.push_back("0.....");
-	sb.push_back("0.....");
-	sb.push_back("0.....");
-	sb.push_back("0.....");
-	sb.push_back("0.....");
-	sb.push_back("0.....");
-	SoftBody::Build(m_physicsScene, vec2(50, -30), 5.0f, 10.0f, 0.1, sb, vec4(1, 0, 0, 1));
+	sb.push_back("000000");
+	sb.push_back("000000");
+	sb.push_back("00....");
+	sb.push_back("00....");
+	sb.push_back("00....");
+	sb.push_back("000000");
+	sb.push_back("000000");
+	SoftBody::Build(m_physicsScene, vec2(70, -30), 5.0f, 10.0f, 0.1, sb, vec4(1, 0, 0, 1));
 }
 
 void PhysicsApp::shutdown()
@@ -140,6 +140,15 @@ void PhysicsApp::update(float deltaTime)
 	m_physicsScene->update(deltaTime);
 	m_physicsScene->draw();
 
+	if (input->isKeyDown(INPUT_KEY_1) || input->isKeyDown(INPUT_KEY_KP_1))
+	{
+		shipScene();
+	}
+	else if (input->isKeyDown(INPUT_KEY_2) || input->isKeyDown(INPUT_KEY_KP_2))
+	{
+		sandboxScene();
+	}
+
 	// exit the application
 	if (input->isKeyDown(aie::INPUT_KEY_ESCAPE))
 		quit();
@@ -161,7 +170,7 @@ void PhysicsApp::draw()
 	char fps[32];
 	sprintf_s(fps, 32, "FPS: %i", getFPS());
 	m_2dRenderer->drawText(m_font, fps, 0, 720 - 32);
-	m_2dRenderer->drawText(m_font, "Least Janky Game", 0, 720 - 64);
+	m_2dRenderer->drawText(m_font, "Scene Change: '1' or '2'", 0, 720 - 64);
 
 	char timer[32];
 	sprintf_s(timer, 32, "Time elapsed: %i", (int)m_timer);

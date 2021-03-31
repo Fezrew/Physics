@@ -7,6 +7,7 @@ public class CharacterMover : MonoBehaviour
     public float speed = 10;
     public float jumpForce = 10;
     public float yeetForce = 1;
+    public float yeetRange = 10;
     float groundDist = 0.1f;
     public bool isGrounded;
     private bool jumpInput = false;
@@ -60,6 +61,14 @@ public class CharacterMover : MonoBehaviour
                 ragdoll.RagdollOn = true;
                 ragdoll.hips.AddForce(new Vector3(cam.forward.x * -yeetForce, cam.forward.y * -yeetForce, cam.forward.z * -yeetForce));
                 //velocity = new Vector3(cam.forward.x * -yeetForce, cam.forward.y * -yeetForce, cam.forward.z * -yeetForce);
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.Mouse1))
+        {
+            RaycastHit hit;
+            if (Physics.Raycast(cam.position, cam.forward, out hit, yeetRange))
+            {
+                
             }
         }
 
