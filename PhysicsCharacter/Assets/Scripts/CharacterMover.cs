@@ -6,8 +6,9 @@ public class CharacterMover : MonoBehaviour
 {
     public float speed = 10;
     public float jumpForce = 10;
-    public float yeetForce = 1;
-    public float yeetRange = 10;
+    public float launchForce = 1;
+    public float throwRange = 10;
+    public float throwForce = 1;
     float groundDist = 0.1f;
     public bool isGrounded;
     private bool jumpInput = false;
@@ -18,6 +19,7 @@ public class CharacterMover : MonoBehaviour
     Transform cam;
     Ragdoll ragdoll;
     Vector2 moveInput = new Vector2();
+    public LayerMask Player;
     public Vector3 velocity = new Vector3();
 
     // Start is called before the first frame update
@@ -59,16 +61,23 @@ public class CharacterMover : MonoBehaviour
             if (ragdoll != null && !ragdoll.RagdollOn)
             {
                 ragdoll.RagdollOn = true;
-                ragdoll.hips.AddForce(new Vector3(cam.forward.x * -yeetForce, cam.forward.y * -yeetForce, cam.forward.z * -yeetForce));
+                ragdoll.hips.AddForce(new Vector3(cam.forward.x * -launchForce, cam.forward.y * -launchForce, cam.forward.z * -launchForce));
                 //velocity = new Vector3(cam.forward.x * -yeetForce, cam.forward.y * -yeetForce, cam.forward.z * -yeetForce);
             }
         }
         if (Input.GetKeyDown(KeyCode.Mouse1))
         {
             RaycastHit hit;
-            if (Physics.Raycast(cam.position, cam.forward, out hit, yeetRange))
+            if (Physics.Raycast(cam.position, cam.forward, out hit, throwRange, ~Player))
             {
-                
+                if (hit.collider.GetComponent<Rigidbody>())
+                {
+                    Rigidbody rb;
+                    rb = hit.collider.GetComponent<Rigidbody>();
+
+                    rb.AddForce(new Vector3(cam.forward.x * throwForce, cam.forward.y * -launchForce, cam.forward.z * throwForce));
+                    Debug.Log("Collided with: " );
+                }
             }
         }
 
