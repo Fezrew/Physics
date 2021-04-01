@@ -2225,7 +2225,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 1216694658}
-  rotateSpeed: 4000
+  rotateSpeed: 200
   distance: 3
   relaxSpeed: 20
   invertY: 0
