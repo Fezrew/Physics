@@ -33,50 +33,56 @@ public:
 	virtual void shutdown();
 
 	/// <summary>
-	/// /this function is called every frame
+	/// This function is called every frame
 	/// </summary>
-	/// <param name="deltaTime"></param>
+	/// <param name="deltaTime">The time between frames</param>
 	virtual void update(float deltaTime);
 
 	/// <summary>
-	/// 
+	/// Draws all the objects in the current scene
 	/// </summary>
 	virtual void draw();
 
 	/// <summary>
-	/// 
+	/// Creates a new ship object and gives it a body
 	/// </summary>
+	/// <param name="position">The global position of the ship's centre</param>
+	/// <param name="orientation">The starting orientation of the ship and all its parts</param>
+	/// <param name="colour">The colour of the ship and all of its parts</param>
+	/// <param name="inputLeft">Pressing this key turns the ship anti-clockwise</param>
+	/// <param name="inputRight">Pressing this key turns the ship clockwise</param>
+	/// <param name="boostInput">Pressing this key makes the ship 20% faster</param>
 	void createShip(vec2 position, float orientation, vec4 colour, EInputCodes inputLeft, EInputCodes inputRight, EInputCodes boostInput);
 
 	/// <summary>
-	/// 
+	/// Starts a new ship-fighting scene
 	/// </summary>
 	void shipScene();
 
 	/// <summary>
-	/// 
+	/// Starts a new physics sandbox scene
 	/// </summary>
 	void sandboxScene();
 
 protected:
 
 	/// <summary>
-	/// 
+	/// Renders all the actors in the scene
 	/// </summary>
 	aie::Renderer2D* m_2dRenderer;
 
 	/// <summary>
-	/// 
+	/// The font of all the text in the physics app
 	/// </summary>
 	aie::Font* m_font;
 
 	/// <summary>
-	/// 
+	/// The currently active physics scene
 	/// </summary>
 	PhysicsScene* m_physicsScene;
 
 	/// <summary>
-	/// 
+	/// The total amount of time passed in the application
 	/// </summary>
 	float m_timer;
 };

@@ -44,6 +44,7 @@ bool PhysicsApp::startup()
 void PhysicsApp::shipScene()
 {
 	m_physicsScene->clear();
+	m_timer = 0;
 
 	Plane* plane = new Plane(vec2(0, 1), -55, vec4(0, 0, 1, 1));
 	m_physicsScene->addActor(plane);
@@ -64,6 +65,7 @@ void PhysicsApp::shipScene()
 void PhysicsApp::sandboxScene()
 {
 	m_physicsScene->clear();
+	m_timer = 0;
 
 	Plane* plane = new Plane(vec2(0, 1), -55, vec4(0, 0, 1, 1));
 	m_physicsScene->addActor(plane);
