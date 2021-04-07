@@ -53,7 +53,7 @@ void RigidBody::applyForce(vec2 force, vec2 pos)
 
 	if (isShip())
 	{
-		m_ship->applyForce(force);
+		m_ship->shipMove(force);
 	}
 	else
 	{

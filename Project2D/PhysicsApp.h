@@ -12,14 +12,7 @@ using namespace aie;
 class PhysicsApp : public aie::Application
 {
 public:
-	/// <summary>
-	/// The constructor of the physics application
-	/// </summary>
 	PhysicsApp();
-
-	/// <summary>
-	/// The destructor of the physics application
-	/// </summary>
 	virtual ~PhysicsApp();
 
 	/// <summary>

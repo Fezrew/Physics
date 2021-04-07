@@ -244,7 +244,7 @@ bool PhysicsScene::sphere2Sphere(PhysicsObject* obj1, PhysicsObject* obj2)
 				sphere1->resolveCollision(sphere2, (sphere1->getPosition() + sphere2->getPosition()) * 0.5f, nullptr, penetration);
 
 				//If either part is a ship, ship collide
-				if (sphere1->hasShipCollided() || sphere2->hasShipCollided())
+				if (sphere1->getShipCollided() || sphere2->getShipCollided())
 				{
 					shipCollision(sphere1, sphere2);
 				}
@@ -312,7 +312,7 @@ bool PhysicsScene::box2Sphere(PhysicsObject* obj1, PhysicsObject* obj2)
 			box->resolveCollision(sphere, contact, &direction, penetration);
 
 			//If either part is a ship, ship collide
-			if (box->hasShipCollided() || sphere->hasShipCollided())
+			if (box->getShipCollided() || sphere->getShipCollided())
 			{
 				shipCollision(box, sphere);
 			}
@@ -345,7 +345,7 @@ bool PhysicsScene::box2Box(PhysicsObject* obj1, PhysicsObject* obj2)
 			box1->resolveCollision(box2, contact / float(numContacts), &norm, pen);
 
 			//If either part is a ship, ship collide
-			if (box1->hasShipCollided() || box2->hasShipCollided())
+			if (box1->getShipCollided() || box2->getShipCollided())
 			{
 				shipCollision(box1, box2);
 			}

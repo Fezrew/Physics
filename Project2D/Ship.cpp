@@ -27,10 +27,10 @@ Ship::~Ship()
 
 void Ship::fixedUpdate(vec2 gravity, float timeStep)
 {
-	shipOrientation = vec2(cosf(m_orientation), sinf(m_orientation));
-	vec2 movement = shipOrientation * m_acceleration;
+	shipPartOrientation = vec2(cosf(m_orientation), sinf(m_orientation));
+	vec2 movement = shipPartOrientation * m_acceleration;
 
-	applyForce(movement);
+	shipMove(movement);
 
 	if (length(m_velocity) > m_speedCap && !input->isKeyDown(m_boost))
 	{
@@ -56,7 +56,7 @@ void Ship::fixedUpdate(vec2 gravity, float timeStep)
 
 	for (int i = 0; i < shipParts.size(); i++)
 	{
-		shipParts[i]->setPosition(m_position + (shipParts[i]->getLocalPos() * shipOrientation));
+		shipParts[i]->setPosition(m_position + (shipParts[i]->getLocalPos() * shipPartOrientation));
 		shipParts[i]->setOrientation(shipParts[i]->getLocalOrientation() + m_orientation);
 		shipParts[i]->setVelocity(m_velocity);
 	}
@@ -69,10 +69,10 @@ void Ship::addToShip(RigidBody* rb, vec2 localPos, float localOri)
 	shipParts.push_back(rb);
 	m_mass += rb->getMass();
 
-	shipOrientation = vec2(cosf(m_orientation), sinf(m_orientation));
+	shipPartOrientation = vec2(cosf(m_orientation), sinf(m_orientation));
 	rb->setLocalPos(localPos);
 	rb->setLocalOrientation(localOri);
-	rb->setPosition(m_position + (localPos * shipOrientation));
+	rb->setPosition(m_position + (localPos * shipPartOrientation));
 	rb->setOrientation(rb->getLocalOrientation() + m_orientation);
 	rb->PhysicsObject::setColour(m_colour);
 	rb->setVelocity(m_velocity);
@@ -87,7 +87,7 @@ void Ship::removeFromShip(RigidBody* rb)
 #pragma endregion
 
 #pragma region Ship Collisions
-void Ship::applyForce(vec2 force)
+void Ship::shipMove(vec2 force)
 {
 	m_velocity += force / getMass();
 }
@@ -98,7 +98,7 @@ void Ship::shipContact(vec2 contact)
 
 	for (int i = 0; i < shipParts.size(); i++)
 	{
-		shipParts[i]->setPosition(m_position + (shipParts[i]->getLocalPos() * shipOrientation));
+		shipParts[i]->setPosition(m_position + (shipParts[i]->getLocalPos() * shipPartOrientation));
 	}
 }
 
