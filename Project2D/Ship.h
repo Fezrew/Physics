@@ -6,8 +6,9 @@
 #include "Input.h"
 
 /// <summary>
-/// A physics object that can change by adding and removing different objects. Ships have multiple important features such as:
-/// - The centre-most position of the ship is displayed by a sphere thatdoesn't interact with physics object.
+/// A physics object that can change by adding and removing different objects. 
+/// Ships have multiple important features such as:
+/// - The centre-most position of the ship is displayed by a sphere that doesn't interact with physics object.
 /// - The ship doesn't start with any parts, so when constructed it will need seperate parts to be added to the scene and then to the ship.
 /// - All rigidbodies have a pointer to a ship, both this pointer and a bool are used to determine if collisions are being made with a ship and if both pieces are from different ships.
 /// - Rigidbodies can be added and removed from the ship at any point in time.
