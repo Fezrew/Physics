@@ -10,12 +10,14 @@ using namespace std;
 using namespace glm;
 
 /// <summary>
-/// A declaration of the PhysicsApp class
+/// A declaration of the PhysicsObject class
 /// </summary>
 class PhysicsObject;
 
 /// <summary>
-/// A scene where physics objects interact with each other
+/// A scene where physics objects interact with each other. You may add and remove physics objects at will.
+/// The scene keeps track of all the objects and checks for collisions, determining their shape  in order to do so.
+/// This class is in charge of calling all the functions inside the various other classes, and can be cleared of all objects whenever.
 /// </summary>
 class PhysicsScene
 {
